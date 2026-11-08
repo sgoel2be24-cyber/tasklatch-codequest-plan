@@ -33,7 +33,7 @@ A working prototype runs locally with `npm start`. See the [prototype runbook](d
   - On a 72-run scenario set with Nemotron 3.5 Lightning, controlled mode had 0 of 36 false successes and 0 writes without an operator decision. Basic agent mode had 12 of 36 and 17.
   - Useful completion was 60% in controlled mode and 53% in basic mode. About one finding in six was misread by that small model.
   - Desktop tasks with GLM 5.3 Flash (a Wikipedia question and a SupplierLab page with hidden instructions) ended Verified.
-- **Not yet tested:** the NVIDIA endpoint has never been run with a real key. The Opticon-derived features (queues, messages, mid-run site approval, files, follow-ups, search) have run only with local rules. The 72-session model comparison in the evaluation plan has not been run.
+- **Not yet tested:** the NVIDIA endpoint has never been run with a real key. The Opticon-derived features (queues, messages, mid-run site approval, files, follow-ups, search) have run only with local rules. Whether a real model attempts a misleading page's instructions has been tested on the desktops only once, with one model.
 - **Isolation:** each agent's desktop is a container inside one Linux VM, not a separate hardware-isolated VM. Network rules are enforced through each desktop's browser proxy, and HTTPS is checked by host only. E2B is excluded because the user's workspace requires a verification payment.
 
 There is no claim of universal prompt-injection prevention, guaranteed reversal of external actions, measured cost savings, or production certification.
@@ -41,7 +41,8 @@ There is no claim of universal prompt-injection prevention, guaranteed reversal 
 ## Next steps
 
 1. Run the Opticon-derived features with a real model, within the per-task spend cap.
-2. Probe the NVIDIA endpoint with a real key, and run the model-backed comparison from the evaluation plan.
-3. Record a narrated demo over `npm start`.
+2. Repeat the misleading-page desktop task several times, and with more than one model.
+3. Probe the NVIDIA endpoint with a real key.
+4. Record a narrated demo over `npm start`.
 
 Do not put secrets, personal browser profiles, captured personal screens, database contents, or runtime credentials in the repository. Keep generated runtime artifacts out of version control by default.

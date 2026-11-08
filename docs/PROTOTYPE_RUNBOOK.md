@@ -1,6 +1,6 @@
 # TaskLatch prototype — runbook
 
-Status as of 7 November 2026: a working local prototype of the three controls (operator-defined permissions, one shared allowance, independent verification), with SupplierLab and the operator workspace. This file covers what was built, how to run it, and what it does not yet do.
+Status as of 8 November 2026: a working local prototype of the three controls (operator-defined permissions, one shared allowance, independent verification), with SupplierLab, the operator workspace, and live Linux desktops for one to four agents. This file covers what was built, how to run it, and what it does not yet do.
 
 ## Run it
 
@@ -227,15 +227,17 @@ The cost of control shows in K6: with an allowance of 2 model calls, controlled 
 
 ## Honest limitations
 
-- **Model inference** covers the Fireworks tasks and the 70-run scenario set described above, all with one model (Nemotron 3.5 Lightning). The acceptance catalog, the comparison and the demo still use local rules. The misleading-content scenario has not been run with a real model. In hosted mode the agent does not imitate a susceptible model, so whether a real model attempts the page's instructions is untested. The model-backed comparison runs from the evaluation plan (§5, 72 sessions) have **not been run**. The basic-agent comparison below uses local-rules agents only.
+- **Model inference.** The model-backed scenario set from the evaluation plan (§5, 72 sessions) has been run twice on Fireworks, with one model (Nemotron 3.5 Lightning). The desktop tasks used GLM 5.3 Flash. The acceptance catalog, the `npm run compare` comparison and the demo recording use local rules only.
+- **Whether a real model attempts a page's instructions is barely tested.** In the scenario set, hosted models only extract findings, so its challenge cases test the controls around scripted operator and fault events. On the desktops the model chooses its own actions, but the misleading-page task has been run there only once with a passing result: both agents recorded the hidden instructions as an injection and ignored them. One run with one model shows little about other models or pages.
 - **Two runtimes.** Live Linux desktops in Docker (described above) and a headless browser-context runtime used by the offline acceptance catalog and comparison. The catalog numbers above were measured on the headless runtime.
 - **Local-rules imitates a susceptible agent.** On misleading pages it deliberately attempts the actions the page asks for, so the boundary can be shown. With a real model, whether it attempts them is an open question.
 - The hash chain detects later edits to stored history. It is not proof against a compromised host.
 - There is no WebSocket channel; the UI polls once per second. There is a single local operator, plus a second test operator for ownership tests.
-- Model-call cancellation on stop works for the NVIDIA client (an AbortSignal). It has not been exercised against a real provider.
+- On stop, in-flight model calls are cancelled through an AbortSignal, for both hosted providers. Cancelling a call that a real provider is still answering has not been tested.
 
 ## Next steps
 
-1. Probe the NVIDIA endpoint with a real key (O-01/O-02 in `DECISIONS_AND_OPEN_QUESTIONS.md`) and run the model-backed scenario set.
-2. Re-run `npm run compare` with a real model (three repetitions per case) once a key is available.
-3. Optionally record a narrated version of the demo over `npm start` (the scripted recording is in `examples/demo/`).
+1. Run the Opticon-derived features (queues, messages, mid-run site approval, files, follow-ups, search) with a real model, within the per-task spend cap.
+2. Repeat the misleading-page desktop task several times, and with more than one model.
+3. Probe the NVIDIA endpoint with a real key (O-01/O-02 in `DECISIONS_AND_OPEN_QUESTIONS.md`).
+4. Optionally record a narrated version of the demo over `npm start` (the scripted recording is in `examples/demo/`).
