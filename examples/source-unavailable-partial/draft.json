@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "draft_id": "drf_119e65cacc87",
+  "created_at": "2026-11-07T18:36:04.724Z",
+  "status": "draft — not submitted",
+  "based_on": {
+    "comparison_id": "cmp_65c64843998e",
+    "comparison_artifact_id": "art_5d4e4ab90d78",
+    "comparison_sha256": "60d9d891bab3a06709e40fefb306c3bbd3557963308b1c1886b69f625ae0ad9d"
+  },
+  "supplier_id": "v-brightoffice",
+  "supplier_name": "BrightOffice Supplies",
+  "product_id": "bo-uc-301",
+  "item_id": "item-usbc-adapter",
+  "quantity": 20,
+  "unit_price_minor": 45000,
+  "currency": "INR",
+  "tax_included": true,
+  "shipping_minor": 0,
+  "total_minor": 900000,
+  "destination": "pr-queue-ops",
+  "requester": "Local operator",
+  "source_id": "src-source-unavailable-bo-page",
+  "source_version": 1,
+  "warnings": [
+    "Based on an incomplete comparison: some sources were unresolved."
+  ]
+}

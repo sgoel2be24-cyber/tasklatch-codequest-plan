@@ -1,0 +1,1450 @@
+{
+  "manifest": {
+    "schema_version": "1.0",
+    "generated_at": "2026-11-07T18:36:06.733Z",
+    "generator": "TaskLatch prototype controller",
+    "session_id": "ses_04c0740c6481",
+    "operator_id": "op_local",
+    "title": "compare source_unavailable",
+    "status": "PARTIAL",
+    "status_label": "Partly verified",
+    "model": {
+      "provider": "local-rules",
+      "label": "Local rules (no model access configured; no inference is performed)"
+    },
+    "policy_version": 1,
+    "runtime": "Headless Chromium browser contexts on the local machine (not containers)",
+    "disclosures": [
+      "All vendors, prices, stock and purchase requests are synthetic SupplierLab fixtures.",
+      "No model inference was used: agents ran the labelled local-rules stand-in.",
+      "Actual payable usage is ₹0. Any currency amount labelled SIMULATED is illustrative only.",
+      "The event hash chain detects later edits to stored rows; it is not independent proof against a compromised host."
+    ],
+    "event_chain": {
+      "ok": true,
+      "count": 22,
+      "broken_at": null
+    },
+    "excluded": [
+      "secrets and credentials",
+      "browser cookies and profiles",
+      "files outside this session",
+      "screenshots (replay is private; export separately)"
+    ]
+  },
+  "scope": {
+    "preset": "research_and_draft",
+    "preset_label": "Research and Draft",
+    "expected_result": "draft",
+    "scenario": "source_unavailable",
+    "allowed_sites": [
+      "http://127.0.0.1:4600"
+    ],
+    "approved_sources": [
+      {
+        "source_id": "src-source-unavailable-bo-page",
+        "path": "/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+        "vendor_id": "v-brightoffice",
+        "kind": "product_page"
+      },
+      {
+        "source_id": "src-source-unavailable-ke-page",
+        "path": "/catalog/source_unavailable/v-kartik/ke-usbca-3a",
+        "vendor_id": "v-kartik",
+        "kind": "product_page"
+      }
+    ],
+    "vendor_names": {
+      "v-brightoffice": "BrightOffice Supplies",
+      "v-kartik": "Kartik Electronics Wholesale"
+    },
+    "file_location": ".runtime/sessions/ses_04c0740c6481/files/<worker>/",
+    "limits": {
+      "workers": 2,
+      "time_seconds": 600,
+      "steps_per_worker": 40,
+      "model_calls": 40,
+      "retries_per_call": 2,
+      "token_ceiling": 60000
+    },
+    "approval_ttl_seconds": 600,
+    "submission_destination": "pr-queue-ops",
+    "destination_label": "SupplierLab › Purchase requests › Operations queue",
+    "actions": {
+      "allowed": [
+        {
+          "type": "browser.navigate",
+          "label": "Open approved supplier pages"
+        },
+        {
+          "type": "browser.read",
+          "label": "Read page content and capture screenshots"
+        },
+        {
+          "type": "finding.record",
+          "label": "Record structured findings (vendor, price, stock, source, time)"
+        },
+        {
+          "type": "artifact.write_candidate",
+          "label": "Save candidate results in the worker’s own task folder"
+        },
+        {
+          "type": "artifact.publish_local",
+          "label": "Coordinator publishes the comparison (and draft)"
+        },
+        {
+          "type": "request.prepare",
+          "label": "Prepare a purchase-request draft (not a submission)"
+        }
+      ],
+      "approval": [
+        {
+          "type": "request.submit",
+          "label": "Submit the purchase request to SupplierLab (only when you chose “approved submission”)"
+        }
+      ],
+      "blocked": [
+        {
+          "type": "request.submit",
+          "label": "Submitting from a worker or a browser form"
+        },
+        {
+          "type": "upload.send",
+          "label": "Uploading files anywhere"
+        },
+        {
+          "type": "browser.navigate",
+          "label": "Any site or page outside the approved sources (including redirects)"
+        },
+        {
+          "type": "file.read",
+          "label": "Reading files from other sessions or the host"
+        },
+        {
+          "type": "artifact.overwrite",
+          "label": "Changing committed work"
+        }
+      ]
+    },
+    "plan_assignments": {
+      "worker-a": [
+        "src-source-unavailable-bo-page"
+      ],
+      "worker-b": [
+        "src-source-unavailable-ke-page"
+      ]
+    },
+    "source_owner": {
+      "src-source-unavailable-bo-page": "worker-a",
+      "src-source-unavailable-ke-page": "worker-b"
+    }
+  },
+  "request": {
+    "description": "compare source_unavailable",
+    "item_id": "item-usbc-adapter",
+    "item_name": "USB-C adapter (USB-C male to USB-A female, 3A)",
+    "quantity": 20,
+    "expected_result": "draft"
+  },
+  "plan": {
+    "subtasks": [
+      {
+        "task_id": "tsk_e34f7a22b6bd",
+        "worker_id": "worker-a",
+        "label": "Worker A",
+        "vendor_id": "v-brightoffice",
+        "source_ids": [
+          "src-source-unavailable-bo-page"
+        ],
+        "title": "Research BrightOffice Supplies"
+      },
+      {
+        "task_id": "tsk_30c16cf89c56",
+        "worker_id": "worker-b",
+        "label": "Worker B",
+        "vendor_id": "v-kartik",
+        "source_ids": [
+          "src-source-unavailable-ke-page"
+        ],
+        "title": "Research Kartik Electronics Wholesale"
+      }
+    ],
+    "rationale": "Each worker researches one vendor in parallel (2 vendors, 2 workers). Work is split by vendor so every finding has one clear author."
+  },
+  "outcome": {
+    "status": "PARTIAL",
+    "label": "Partly verified",
+    "summary": "Some deliverables are verified; others are unresolved or incomplete.",
+    "deliverables": {
+      "comparison": "partial",
+      "draft": "verified"
+    },
+    "decided_at": "2026-11-07T18:36:04.728Z",
+    "decided_by": "controller (from verification results)"
+  },
+  "source_index": [
+    {
+      "source_id": "src-source-unavailable-bo-page",
+      "path": "/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "vendor_id": "v-brightoffice",
+      "kind": "product_page",
+      "owner": "worker-a",
+      "observations": [
+        {
+          "finding_id": "fnd_f1031f74f653",
+          "by": "worker-a",
+          "status": "observed",
+          "source_version": 1,
+          "captured_at": "2026-11-07T18:36:02.283Z"
+        }
+      ]
+    },
+    {
+      "source_id": "src-source-unavailable-ke-page",
+      "path": "/catalog/source_unavailable/v-kartik/ke-usbca-3a",
+      "vendor_id": "v-kartik",
+      "kind": "product_page",
+      "owner": "worker-b",
+      "observations": [
+        {
+          "finding_id": "fnd_b17e55206962",
+          "by": "worker-b",
+          "status": "unavailable",
+          "source_version": null,
+          "captured_at": "2026-11-07T18:36:04.718Z"
+        }
+      ]
+    }
+  ],
+  "agent_statements": [
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 2,
+      "at": "2026-11-07T18:36:02.226Z",
+      "actor": "coordinator",
+      "kind": "plan.proposed",
+      "provenance": "agent_statement",
+      "summary": "Coordinator proposed 2 research subtask(s): Worker A → Research BrightOffice Supplies; Worker B → Research Kartik Electronics Wholesale",
+      "data": {
+        "rationale": "Each worker researches one vendor in parallel (2 vendors, 2 workers). Work is split by vendor so every finding has one clear author.",
+        "subtasks": [
+          {
+            "label": "Worker A",
+            "source_ids": [
+              "src-source-unavailable-bo-page"
+            ],
+            "task_id": "tsk_e34f7a22b6bd",
+            "title": "Research BrightOffice Supplies",
+            "vendor_id": "v-brightoffice",
+            "worker_id": "worker-a"
+          },
+          {
+            "label": "Worker B",
+            "source_ids": [
+              "src-source-unavailable-ke-page"
+            ],
+            "task_id": "tsk_30c16cf89c56",
+            "title": "Research Kartik Electronics Wholesale",
+            "vendor_id": "v-kartik",
+            "worker_id": "worker-b"
+          }
+        ]
+      },
+      "prev_hash": "042aa225a1c565566b30d5222708516dfa63351fe4a0cf66395c23c92ea7da4b",
+      "hash": "fbc4ca498e9ea93ff4388155e7c662f2cafff7255f9c6ab36f9114519fb4ad29"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 9,
+      "at": "2026-11-07T18:36:02.284Z",
+      "actor": "worker-a",
+      "kind": "finding.recorded",
+      "provenance": "agent_statement",
+      "summary": "Worker A reports bo-uc-301: ₹450, 120 in stock",
+      "data": {
+        "author_agent": "worker-a",
+        "captured_at": "2026-11-07T18:36:02.283Z",
+        "currency": "INR",
+        "extracted_by": "local-rules",
+        "finding_id": "fnd_f1031f74f653",
+        "limitations": [],
+        "product_id": "bo-uc-301",
+        "product_title": "BrightOffice UC-301 USB-C to USB-A adapter, 3A",
+        "screenshot": null,
+        "shipping_minor": 0,
+        "source_id": "src-source-unavailable-bo-page",
+        "source_url": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+        "source_version": 1,
+        "status": "observed",
+        "stock_qty": 120,
+        "stock_status": "in_stock",
+        "task_id": "tsk_e34f7a22b6bd",
+        "tax_included": true,
+        "unit_price_minor": 45000,
+        "untrusted_page_text": null,
+        "vendor_id": "v-brightoffice"
+      },
+      "prev_hash": "6783f147f78d48798b62a58e8f40faa6a739b8df128a04bac1fe8d459391f0f6",
+      "hash": "cbf325825521c3f3649da89dd17aec9d7403c368b12982ef55a248477919e729"
+    }
+  ],
+  "tasklatch_observations": [
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 6,
+      "at": "2026-11-07T18:36:02.277Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: source src-source-unavailable-ke-page unavailable (HTTP 503), retrying",
+      "data": {
+        "attempt": 0
+      },
+      "prev_hash": "55e1a38dbc6adf4b4ca74bf2b1cf1da4eab81ef02b2b13b7cfc356675cf5777a",
+      "hash": "5b1982677a35af4f63e29d1e8c7bb8bedbf59a8270517af9fa96dd3117ec2518"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 11,
+      "at": "2026-11-07T18:36:02.285Z",
+      "actor": "worker-a",
+      "kind": "artifact.saved",
+      "provenance": "observed",
+      "summary": "Worker A saved candidate findings (1)",
+      "data": {
+        "id": "art_426fca8915a5",
+        "rel_path": "files/worker-a/candidate-findings.json",
+        "sha256": "9f6d7bea6bae8faf195abd22ac9746102ce5c3e7c4cf9f6533e11d3c6d30a6c6"
+      },
+      "prev_hash": "0469bb6a3f13d1a6e92f81e5a2c2d71b50c4336f29ba54848e15161a8e3b6b96",
+      "hash": "876e741f81be3a4d5eb1a71e5aca07ac0fd9b56972178c18a9dd07abc69cda78"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 12,
+      "at": "2026-11-07T18:36:03.499Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: source src-source-unavailable-ke-page unavailable (HTTP 503), retrying",
+      "data": {
+        "attempt": 1
+      },
+      "prev_hash": "876e741f81be3a4d5eb1a71e5aca07ac0fd9b56972178c18a9dd07abc69cda78",
+      "hash": "53b6a4891d08622f7520b8e77cc02527d16cb6e90be55f35b5519de174b91d7e"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 13,
+      "at": "2026-11-07T18:36:04.718Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: Source unavailable: HTTP 503 after 3 attempts.",
+      "data": {
+        "source_id": "src-source-unavailable-ke-page"
+      },
+      "prev_hash": "53b6a4891d08622f7520b8e77cc02527d16cb6e90be55f35b5519de174b91d7e",
+      "hash": "475fc20d4b632dfef1141e2323dcf18a8424cf4f2199df6587ea3d7d2b601cbb"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 15,
+      "at": "2026-11-07T18:36:04.719Z",
+      "actor": "worker-b",
+      "kind": "artifact.saved",
+      "provenance": "observed",
+      "summary": "Worker B saved candidate findings (1)",
+      "data": {
+        "id": "art_1cf823eb3197",
+        "rel_path": "files/worker-b/candidate-findings.json",
+        "sha256": "1202fa6f27e0e9f5005955337731792802886fb30f675627918f7282c0ec534e"
+      },
+      "prev_hash": "95a2c88702b8cfa18a304b978f935297eaedd22b7507817b4e8b3dfa16dfb95e",
+      "hash": "27f130a118bd0839e245c71c60ccd487003044ce59125d4240dd3d4254b67b4f"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 17,
+      "at": "2026-11-07T18:36:04.724Z",
+      "actor": "coordinator",
+      "kind": "artifact.published",
+      "provenance": "observed",
+      "summary": "Comparison published (1 vendor rows, 1 unresolved, 1 warnings)",
+      "data": {
+        "artifact": {
+          "id": "art_5d4e4ab90d78",
+          "rel_path": "files/coordinator/comparison.json",
+          "sha256": "60d9d891bab3a06709e40fefb306c3bbd3557963308b1c1886b69f625ae0ad9d"
+        }
+      },
+      "prev_hash": "cd9a0c0460be8cc183bc03e1369452112e0a34b1a1f8adb182a5f845c1f0b9bb",
+      "hash": "43ce05485dad04e217b08fdd4960292ba9b88ec8376abe66d5b018da5dbb5b48"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 19,
+      "at": "2026-11-07T18:36:04.725Z",
+      "actor": "coordinator",
+      "kind": "artifact.published",
+      "provenance": "observed",
+      "summary": "Draft prepared: BrightOffice Supplies, 20 × ₹450 = ₹9,000 (not submitted)",
+      "data": {
+        "artifact": {
+          "id": "art_f57d2c52e254",
+          "rel_path": "files/coordinator/draft.json",
+          "sha256": "83fbaa01f5554d56a6e6cab9a6572bbebcabf60ddd122d1685358ef8100f37e3"
+        }
+      },
+      "prev_hash": "0a7d5cef46f5c8c094331934830910630b0cabcddc66e4816616ae5d442e5182",
+      "hash": "4d64a61481fec71798ee3ddc6e95b44e9869bdc6e0ff527fb175b18b97ab96e1"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 20,
+      "at": "2026-11-07T18:36:04.727Z",
+      "actor": "verifier",
+      "kind": "verification.result",
+      "provenance": "observed",
+      "summary": "comparison: partial — 1 vendor(s) verified; 1 source(s) unresolved",
+      "data": {
+        "deliverable": "comparison",
+        "failed": [
+          {
+            "detail": "src-source-unavailable-ke-page: Source unavailable: HTTP 503 after 3 attempts.",
+            "name": "unresolved_sources",
+            "status": "unverified"
+          }
+        ],
+        "status": "partial"
+      },
+      "prev_hash": "4d64a61481fec71798ee3ddc6e95b44e9869bdc6e0ff527fb175b18b97ab96e1",
+      "hash": "670fcb926b34aae099d72792e797e8f1c4b6cd069b0044e457d9f552f12c67c5"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 21,
+      "at": "2026-11-07T18:36:04.727Z",
+      "actor": "verifier",
+      "kind": "verification.result",
+      "provenance": "observed",
+      "summary": "draft: verified — Draft for ₹9,000 is consistent",
+      "data": {
+        "deliverable": "draft",
+        "failed": [],
+        "status": "verified"
+      },
+      "prev_hash": "670fcb926b34aae099d72792e797e8f1c4b6cd069b0044e457d9f552f12c67c5",
+      "hash": "edaeb9383ebcc81fddf6bfb5ec5806e6b80dc8e2613a5ee83da54d3844dc7dcd"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 22,
+      "at": "2026-11-07T18:36:04.728Z",
+      "actor": "controller",
+      "kind": "session.outcome",
+      "provenance": "observed",
+      "summary": "Outcome: Partly verified — Some deliverables are verified; others are unresolved or incomplete.",
+      "data": {
+        "decided_at": "2026-11-07T18:36:04.728Z",
+        "decided_by": "controller (from verification results)",
+        "deliverables": {
+          "comparison": "partial",
+          "draft": "verified"
+        },
+        "label": "Partly verified",
+        "status": "PARTIAL",
+        "summary": "Some deliverables are verified; others are unresolved or incomplete."
+      },
+      "prev_hash": "edaeb9383ebcc81fddf6bfb5ec5806e6b80dc8e2613a5ee83da54d3844dc7dcd",
+      "hash": "9d06cf6bae40b2051fc0ebaf1a8bd6e8d4d41f357fd98d436598db415497ae5d"
+    }
+  ],
+  "operator_decisions": [
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 1,
+      "at": "2026-11-07T18:36:02.225Z",
+      "actor": "operator",
+      "kind": "session.created",
+      "provenance": "operator_decision",
+      "summary": "Task created: compare source_unavailable",
+      "data": {
+        "expected_result": "draft",
+        "request": {
+          "description": "compare source_unavailable",
+          "expected_result": "draft",
+          "item_id": "item-usbc-adapter",
+          "item_name": "USB-C adapter (USB-C male to USB-A female, 3A)",
+          "quantity": 20
+        }
+      },
+      "prev_hash": "genesis",
+      "hash": "042aa225a1c565566b30d5222708516dfa63351fe4a0cf66395c23c92ea7da4b"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 3,
+      "at": "2026-11-07T18:36:02.227Z",
+      "actor": "operator",
+      "kind": "session.started",
+      "provenance": "operator_decision",
+      "summary": "You started the task with 2 worker(s); deadline 2026-11-07T18:46:02.227Z",
+      "data": {
+        "scope_policy_version": 1
+      },
+      "prev_hash": "fbc4ca498e9ea93ff4388155e7c662f2cafff7255f9c6ab36f9114519fb4ad29",
+      "hash": "d3d1378d6e404d646576d4d7d6c15571dd32699686cdd7905e413688fdc6606f"
+    }
+  ],
+  "permissions": [
+    {
+      "id": "act_02b9ecb95ea1",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-a",
+      "task_id": "tsk_e34f7a22b6bd",
+      "action_type": "browser.navigate",
+      "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "approved_source",
+      "reason": "Approved supplier page within this task’s scope.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:02.260Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_82bb5e3b2c51",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-b",
+      "task_id": "tsk_30c16cf89c56",
+      "action_type": "browser.navigate",
+      "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-kartik/ke-usbca-3a",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "approved_source",
+      "reason": "Approved supplier page within this task’s scope.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:02.260Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_36c60350a233",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-a",
+      "task_id": "tsk_e34f7a22b6bd",
+      "action_type": "browser.read",
+      "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "approved_source",
+      "reason": "Approved supplier page within this task’s scope.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:02.279Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_e3637716caea",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-a",
+      "task_id": "tsk_e34f7a22b6bd",
+      "action_type": "finding.record",
+      "resource": "src-source-unavailable-bo-page",
+      "payload": {
+        "finding_id": "fnd_f1031f74f653"
+      },
+      "decision": "ALLOW",
+      "reason_code": "in_scope",
+      "reason": "Recording a structured finding is part of research.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:02.284Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_bbb43b8abda6",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-a",
+      "task_id": "tsk_e34f7a22b6bd",
+      "action_type": "artifact.write_candidate",
+      "resource": "candidate-findings.json",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "own_task_folder",
+      "reason": "Saving a candidate result in the worker’s own task folder.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:02.285Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_ee6e0d171c2d",
+      "session_id": "ses_04c0740c6481",
+      "actor": "worker-b",
+      "task_id": "tsk_30c16cf89c56",
+      "action_type": "artifact.write_candidate",
+      "resource": "candidate-findings.json",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "own_task_folder",
+      "reason": "Saving a candidate result in the worker’s own task folder.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:04.718Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_d9317168591a",
+      "session_id": "ses_04c0740c6481",
+      "actor": "coordinator",
+      "task_id": null,
+      "action_type": "artifact.publish_local",
+      "resource": "comparison.json",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "coordinator_publish",
+      "reason": "The coordinator publishes the comparison and draft for this task.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:04.723Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    },
+    {
+      "id": "act_0032de0194c7",
+      "session_id": "ses_04c0740c6481",
+      "actor": "coordinator",
+      "task_id": null,
+      "action_type": "request.prepare",
+      "resource": "draft.json",
+      "payload": null,
+      "decision": "ALLOW",
+      "reason_code": "draft_in_scope",
+      "reason": "Preparing a draft is allowed. A draft is not a submission.",
+      "policy_version": 1,
+      "created_at": "2026-11-07T18:36:04.724Z",
+      "outcome": null,
+      "decision_label": "Allowed"
+    }
+  ],
+  "approvals": [],
+  "submissions": [],
+  "budget": {
+    "limits": {
+      "workers": 2,
+      "time_seconds": 600,
+      "steps_per_worker": 40,
+      "model_calls": 40,
+      "retries_per_call": 2,
+      "token_ceiling": 60000
+    },
+    "model_calls": {
+      "limit": 40,
+      "used": 3,
+      "in_progress": 0,
+      "uncertain": 0,
+      "released": 0,
+      "remaining": 37,
+      "by_actor": {
+        "coordinator": 2,
+        "worker-a": 1
+      }
+    },
+    "tokens": {
+      "ceiling": 60000,
+      "reported": 0,
+      "estimated": 0,
+      "unknown_calls": 0,
+      "no_inference_calls": 3,
+      "reserved": 0,
+      "remaining": 60000
+    },
+    "steps": [
+      {
+        "worker_id": "worker-a",
+        "label": "Worker A",
+        "used": 3,
+        "limit": 40,
+        "remaining": 37
+      },
+      {
+        "worker_id": "worker-b",
+        "label": "Worker B",
+        "used": 4,
+        "limit": 40,
+        "remaining": 36
+      }
+    ],
+    "time": {
+      "limit_seconds": 600,
+      "elapsed_seconds": 3,
+      "deadline_at": "2026-11-07T18:46:02.227Z"
+    },
+    "retries": {
+      "per_call_limit": 2,
+      "used": 0
+    },
+    "workers": {
+      "limit": 2,
+      "count": 2
+    },
+    "reservations": [
+      {
+        "id": "res_e7d0e3128937",
+        "session_id": "ses_04c0740c6481",
+        "actor": "coordinator",
+        "kind": "model_call",
+        "purpose": "propose plan",
+        "calls": 1,
+        "tokens_reserved": 0,
+        "status": "committed",
+        "tokens_used": 0,
+        "usage_source": "none",
+        "retry_of": null,
+        "created_at": "2026-11-07T18:36:02.225Z",
+        "settled_at": "2026-11-07T18:36:02.225Z",
+        "note": "local-rules decision (no inference)"
+      },
+      {
+        "id": "res_0597e656d50a",
+        "session_id": "ses_04c0740c6481",
+        "actor": "worker-a",
+        "kind": "model_call",
+        "purpose": "extract finding from src-source-unavailable-bo-page",
+        "calls": 1,
+        "tokens_reserved": 0,
+        "status": "committed",
+        "tokens_used": 0,
+        "usage_source": "none",
+        "retry_of": null,
+        "created_at": "2026-11-07T18:36:02.284Z",
+        "settled_at": "2026-11-07T18:36:02.284Z",
+        "note": "local-rules decision (no inference)"
+      },
+      {
+        "id": "res_9954a3375514",
+        "session_id": "ses_04c0740c6481",
+        "actor": "coordinator",
+        "kind": "model_call",
+        "purpose": "merge findings into comparison",
+        "calls": 1,
+        "tokens_reserved": 0,
+        "status": "committed",
+        "tokens_used": 0,
+        "usage_source": "none",
+        "retry_of": null,
+        "created_at": "2026-11-07T18:36:04.723Z",
+        "settled_at": "2026-11-07T18:36:04.723Z",
+        "note": "local-rules decision (no inference)"
+      }
+    ],
+    "payable_cost": {
+      "amount_inr": 0,
+      "note": "Actual payable usage: ₹0. No paid inference is used; local-rules decisions and free-tier calls have no payable cost."
+    },
+    "simulated_cost": {
+      "label": "SIMULATED — not a real charge",
+      "tariff": {
+        "version": "sim-2026-11-v1",
+        "per_call_minor": 50,
+        "per_1k_tokens_minor": 20
+      },
+      "amount_minor": 150
+    }
+  },
+  "verification": {
+    "draft": {
+      "id": "ver_d2452f8d740f",
+      "session_id": "ses_04c0740c6481",
+      "deliverable": "draft",
+      "status": "verified",
+      "summary": "Draft for ₹9,000 is consistent",
+      "checks": [
+        {
+          "name": "artifact_intact",
+          "status": "pass",
+          "detail": "Draft file matches its recorded hash",
+          "ref": "art_f57d2c52e254"
+        },
+        {
+          "name": "linked_to_comparison",
+          "status": "pass",
+          "detail": "Refers to comparison cmp_65c64843998e (hash matches)",
+          "ref": "art_5d4e4ab90d78"
+        },
+        {
+          "name": "matches_comparison",
+          "status": "pass",
+          "detail": "BrightOffice Supplies at ₹450 matches the comparison"
+        },
+        {
+          "name": "total",
+          "status": "pass",
+          "detail": "20 × ₹450 + ₹0 shipping = ₹9,000"
+        },
+        {
+          "name": "quantity",
+          "status": "pass",
+          "detail": "Quantity 20 as requested"
+        },
+        {
+          "name": "destination",
+          "status": "pass",
+          "detail": "Destination pr-queue-ops"
+        }
+      ],
+      "created_at": "2026-11-07T18:36:04.727Z"
+    },
+    "comparison": {
+      "id": "ver_ea987d3894a5",
+      "session_id": "ses_04c0740c6481",
+      "deliverable": "comparison",
+      "status": "partial",
+      "summary": "1 vendor(s) verified; 1 source(s) unresolved",
+      "checks": [
+        {
+          "name": "artifact_intact",
+          "status": "pass",
+          "detail": "sha256 60d9d891bab3a067… matches the saved record",
+          "ref": "art_5d4e4ab90d78"
+        },
+        {
+          "name": "schema",
+          "status": "pass",
+          "detail": "Required fields present"
+        },
+        {
+          "name": "matches_request",
+          "status": "pass",
+          "detail": "Item item-usbc-adapter, quantity 20"
+        },
+        {
+          "name": "source_exists:src-source-unavailable-bo-page",
+          "status": "pass",
+          "detail": "src-source-unavailable-bo-page v1 exists (found by worker-a at 2026-11-07T18:36:02.283Z)",
+          "ref": "src-source-unavailable-bo-page"
+        },
+        {
+          "name": "price:v-brightoffice",
+          "status": "pass",
+          "detail": "BrightOffice Supplies: ₹450 matches the recorded source"
+        },
+        {
+          "name": "stock:v-brightoffice",
+          "status": "pass",
+          "detail": "BrightOffice Supplies: 120 units matches the source"
+        },
+        {
+          "name": "coverage",
+          "status": "pass",
+          "detail": "Every approved source is covered or explicitly unresolved"
+        },
+        {
+          "name": "unresolved_sources",
+          "status": "unverified",
+          "detail": "src-source-unavailable-ke-page: Source unavailable: HTTP 503 after 3 attempts."
+        }
+      ],
+      "created_at": "2026-11-07T18:36:04.726Z"
+    }
+  },
+  "tasks": [
+    {
+      "id": "tsk_e34f7a22b6bd",
+      "session_id": "ses_04c0740c6481",
+      "kind": "research",
+      "assignee": "worker-a",
+      "title": "Research BrightOffice Supplies",
+      "status": "verified",
+      "detail": "1 of 1 sources observed",
+      "source_ids": [
+        "src-source-unavailable-bo-page"
+      ],
+      "updated_at": "2026-11-07T18:36:04.727Z",
+      "ord": 0
+    },
+    {
+      "id": "tsk_30c16cf89c56",
+      "session_id": "ses_04c0740c6481",
+      "kind": "research",
+      "assignee": "worker-b",
+      "title": "Research Kartik Electronics Wholesale",
+      "status": "failed",
+      "detail": "0 of 1 sources observed",
+      "source_ids": [
+        "src-source-unavailable-ke-page"
+      ],
+      "updated_at": "2026-11-07T18:36:04.719Z",
+      "ord": 1
+    },
+    {
+      "id": "tsk_2d1c53abcbe2",
+      "session_id": "ses_04c0740c6481",
+      "kind": "compare",
+      "assignee": "coordinator",
+      "title": "Merge findings into a comparison",
+      "status": "partial",
+      "detail": "1 vendor(s) compared, 1 source(s) unresolved",
+      "source_ids": [],
+      "updated_at": "2026-11-07T18:36:04.724Z",
+      "ord": 2
+    },
+    {
+      "id": "tsk_4cac1c2f0c3c",
+      "session_id": "ses_04c0740c6481",
+      "kind": "draft",
+      "assignee": "coordinator",
+      "title": "Prepare purchase-request draft",
+      "status": "submitted",
+      "detail": "20 × bo-uc-301 from BrightOffice Supplies = ₹9,000",
+      "source_ids": [],
+      "updated_at": "2026-11-07T18:36:04.725Z",
+      "ord": 3
+    },
+    {
+      "id": "tsk_46ebec27c3ea",
+      "session_id": "ses_04c0740c6481",
+      "kind": "verify",
+      "assignee": "verifier",
+      "title": "Verify deliverables independently",
+      "status": "done",
+      "detail": "Some deliverables are verified; others are unresolved or incomplete.",
+      "source_ids": [],
+      "updated_at": "2026-11-07T18:36:04.728Z",
+      "ord": 4
+    }
+  ],
+  "workers": [
+    {
+      "session_id": "ses_04c0740c6481",
+      "worker_id": "worker-a",
+      "label": "Worker A",
+      "status": "done",
+      "activity": "Done — findings submitted for verification",
+      "current_url": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "last_screenshot": null,
+      "lease_expires_at": "2026-11-07T18:36:04.728Z",
+      "steps_used": 3,
+      "updated_at": "2026-11-07T18:36:02.286Z",
+      "stopped_at": "2026-11-07T18:36:02.286Z"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "worker_id": "worker-b",
+      "label": "Worker B",
+      "status": "failed",
+      "activity": "Unsuccessful — no usable findings",
+      "current_url": "http://127.0.0.1:4600/catalog/source_unavailable/v-kartik/ke-usbca-3a",
+      "last_screenshot": null,
+      "lease_expires_at": "2026-11-07T18:36:04.728Z",
+      "steps_used": 4,
+      "updated_at": "2026-11-07T18:36:04.719Z",
+      "stopped_at": "2026-11-07T18:36:04.719Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art_426fca8915a5",
+      "owner": "worker-a",
+      "kind": "candidate_findings",
+      "label": "Worker A candidate findings",
+      "media_type": "application/json",
+      "sha256": "9f6d7bea6bae8faf195abd22ac9746102ce5c3e7c4cf9f6533e11d3c6d30a6c6",
+      "committed": 0,
+      "created_at": "2026-11-07T18:36:02.285Z",
+      "intact": true,
+      "content": "{\n  \"schema_version\": \"1.0\",\n  \"author_agent\": \"worker-a\",\n  \"task_id\": \"tsk_e34f7a22b6bd\",\n  \"findings\": [\n    {\n      \"finding_id\": \"fnd_f1031f74f653\",\n      \"author_agent\": \"worker-a\",\n      \"task_id\": \"tsk_e34f7a22b6bd\",\n      \"source_id\": \"src-source-unavailable-bo-page\",\n      \"source_version\": 1,\n      \"source_url\": \"http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301\",\n      \"captured_at\": \"2026-11-07T18:36:02.283Z\",\n      \"vendor_id\": \"v-brightoffice\",\n      \"product_id\": \"bo-uc-301\",\n      \"product_title\": \"BrightOffice UC-301 USB-C to USB-A adapter, 3A\",\n      \"unit_price_minor\": 45000,\n      \"currency\": \"INR\",\n      \"stock_qty\": 120,\n      \"stock_status\": \"in_stock\",\n      \"tax_included\": true,\n      \"shipping_minor\": 0,\n      \"limitations\": [],\n      \"untrusted_page_text\": null,\n      \"screenshot\": null,\n      \"extracted_by\": \"local-rules\",\n      \"status\": \"observed\"\n    }\n  ]\n}"
+    },
+    {
+      "id": "art_1cf823eb3197",
+      "owner": "worker-b",
+      "kind": "candidate_findings",
+      "label": "Worker B candidate findings",
+      "media_type": "application/json",
+      "sha256": "1202fa6f27e0e9f5005955337731792802886fb30f675627918f7282c0ec534e",
+      "committed": 0,
+      "created_at": "2026-11-07T18:36:04.719Z",
+      "intact": true,
+      "content": "{\n  \"schema_version\": \"1.0\",\n  \"author_agent\": \"worker-b\",\n  \"task_id\": \"tsk_30c16cf89c56\",\n  \"findings\": [\n    {\n      \"finding_id\": \"fnd_b17e55206962\",\n      \"author_agent\": \"worker-b\",\n      \"task_id\": \"tsk_30c16cf89c56\",\n      \"source_id\": \"src-source-unavailable-ke-page\",\n      \"source_version\": null,\n      \"source_url\": \"http://127.0.0.1:4600/catalog/source_unavailable/v-kartik/ke-usbca-3a\",\n      \"captured_at\": \"2026-11-07T18:36:04.718Z\",\n      \"vendor_id\": \"v-kartik\",\n      \"product_id\": null,\n      \"product_title\": null,\n      \"unit_price_minor\": null,\n      \"currency\": null,\n      \"stock_qty\": null,\n      \"stock_status\": \"unknown\",\n      \"tax_included\": null,\n      \"shipping_minor\": null,\n      \"limitations\": [\n        \"Source unavailable: HTTP 503 after 3 attempts.\"\n      ],\n      \"untrusted_page_text\": null,\n      \"screenshot\": null,\n      \"extracted_by\": \"local-rules\",\n      \"status\": \"unavailable\"\n    }\n  ]\n}"
+    },
+    {
+      "id": "art_5d4e4ab90d78",
+      "owner": "coordinator",
+      "kind": "comparison",
+      "label": "Supplier comparison (structured)",
+      "media_type": "application/json",
+      "sha256": "60d9d891bab3a06709e40fefb306c3bbd3557963308b1c1886b69f625ae0ad9d",
+      "committed": 1,
+      "created_at": "2026-11-07T18:36:04.723Z",
+      "intact": true,
+      "content": "{\n  \"schema_version\": \"1.0\",\n  \"comparison_id\": \"cmp_65c64843998e\",\n  \"generated_at\": \"2026-11-07T18:36:04.723Z\",\n  \"generated_by\": \"coordinator\",\n  \"request\": {\n    \"item_id\": \"item-usbc-adapter\",\n    \"item_name\": \"USB-C adapter (USB-C male to USB-A female, 3A)\",\n    \"quantity\": 20\n  },\n  \"currency\": \"INR\",\n  \"rows\": [\n    {\n      \"vendor_id\": \"v-brightoffice\",\n      \"vendor_name\": \"BrightOffice Supplies\",\n      \"product_id\": \"bo-uc-301\",\n      \"product_title\": \"BrightOffice UC-301 USB-C to USB-A adapter, 3A\",\n      \"unit_price_minor\": 45000,\n      \"price_status\": \"confirmed\",\n      \"conflicting_prices\": [],\n      \"currency\": \"INR\",\n      \"stock_qty\": 120,\n      \"stock_status\": \"in_stock\",\n      \"meets_quantity\": true,\n      \"tax_included\": true,\n      \"shipping_minor\": 0,\n      \"source_refs\": [\n        {\n          \"source_id\": \"src-source-unavailable-bo-page\",\n          \"source_version\": 1,\n          \"captured_at\": \"2026-11-07T18:36:02.283Z\",\n          \"found_by\": \"worker-a\",\n          \"url\": \"http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301\"\n        }\n      ],\n      \"found_by\": [\n        \"worker-a\"\n      ],\n      \"flags\": []\n    }\n  ],\n  \"unresolved\": [\n    {\n      \"source_id\": \"src-source-unavailable-ke-page\",\n      \"vendor_id\": \"v-kartik\",\n      \"assigned_to\": \"worker-b\",\n      \"reason\": \"Source unavailable: HTTP 503 after 3 attempts.\"\n    }\n  ],\n  \"recommendation\": {\n    \"vendor_id\": \"v-brightoffice\",\n    \"reason\": \"Lowest confirmed unit price (₹450) among vendors with at least 20 units in stock.\",\n    \"warnings\": []\n  },\n  \"warnings\": [\n    \"Unresolved source src-source-unavailable-ke-page: Source unavailable: HTTP 503 after 3 attempts.\"\n  ],\n  \"untrusted_content\": [],\n  \"complete\": false\n}"
+    },
+    {
+      "id": "art_89620af7cfde",
+      "owner": "coordinator",
+      "kind": "comparison_md",
+      "label": "Supplier comparison (readable)",
+      "media_type": "text/markdown",
+      "sha256": "2e8276e94180a63c39aea33b2af4fbd110a84bcdabb167d0eefbe2b4500bf378",
+      "committed": 1,
+      "created_at": "2026-11-07T18:36:04.724Z",
+      "intact": true,
+      "content": "# Supplier comparison — USB-C adapter (USB-C male to USB-A female, 3A)\n\nRequested quantity: **20** · Generated 2026-11-07T18:36:04.723Z · **Incomplete: some sources unresolved**\n\n| Vendor | Product | Unit price | Stock | Sources (version, captured, by) | Flags |\n|---|---|---|---|---|---|\n| BrightOffice Supplies | bo-uc-301 | ₹450 | 120 units | src-source-unavailable-bo-page v1, 2026-11-07T18:36:02.283Z, worker-a | — |\n\n## Unresolved\n- src-source-unavailable-ke-page (worker-b): Source unavailable: HTTP 503 after 3 attempts.\n\n## Recommendation\nv-brightoffice: Lowest confirmed unit price (₹450) among vendors with at least 20 units in stock.\n"
+    },
+    {
+      "id": "art_f57d2c52e254",
+      "owner": "coordinator",
+      "kind": "draft",
+      "label": "Purchase-request draft",
+      "media_type": "application/json",
+      "sha256": "83fbaa01f5554d56a6e6cab9a6572bbebcabf60ddd122d1685358ef8100f37e3",
+      "committed": 1,
+      "created_at": "2026-11-07T18:36:04.724Z",
+      "intact": true,
+      "content": "{\n  \"schema_version\": \"1.0\",\n  \"draft_id\": \"drf_119e65cacc87\",\n  \"created_at\": \"2026-11-07T18:36:04.724Z\",\n  \"status\": \"draft — not submitted\",\n  \"based_on\": {\n    \"comparison_id\": \"cmp_65c64843998e\",\n    \"comparison_artifact_id\": \"art_5d4e4ab90d78\",\n    \"comparison_sha256\": \"60d9d891bab3a06709e40fefb306c3bbd3557963308b1c1886b69f625ae0ad9d\"\n  },\n  \"supplier_id\": \"v-brightoffice\",\n  \"supplier_name\": \"BrightOffice Supplies\",\n  \"product_id\": \"bo-uc-301\",\n  \"item_id\": \"item-usbc-adapter\",\n  \"quantity\": 20,\n  \"unit_price_minor\": 45000,\n  \"currency\": \"INR\",\n  \"tax_included\": true,\n  \"shipping_minor\": 0,\n  \"total_minor\": 900000,\n  \"destination\": \"pr-queue-ops\",\n  \"requester\": \"Local operator\",\n  \"source_id\": \"src-source-unavailable-bo-page\",\n  \"source_version\": 1,\n  \"warnings\": [\n    \"Based on an incomplete comparison: some sources were unresolved.\"\n  ]\n}"
+    },
+    {
+      "id": "art_f6b57f270374",
+      "owner": "coordinator",
+      "kind": "draft_md",
+      "label": "Purchase-request draft (readable)",
+      "media_type": "text/markdown",
+      "sha256": "e38e056af7fb9bcbd65c7870b003392be64eed94ab6f2f8ea5a45af71ee949fe",
+      "committed": 1,
+      "created_at": "2026-11-07T18:36:04.725Z",
+      "intact": true,
+      "content": "# Purchase-request draft (not submitted)\n\n- Supplier: **BrightOffice Supplies** (v-brightoffice)\n- Item: bo-uc-301 (item-usbc-adapter)\n- Quantity: **20**\n- Unit price: ₹450 (tax included)\n- Shipping: ₹0\n- **Total: ₹9,000**\n- Destination: pr-queue-ops\n- Requester: Local operator\n- Based on comparison cmp_65c64843998e (sha256 60d9d891bab3a067…), source src-source-unavailable-bo-page v1\n\n**Warnings:**\n- Based on an incomplete comparison: some sources were unresolved.\n"
+    }
+  ],
+  "events": [
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 1,
+      "at": "2026-11-07T18:36:02.225Z",
+      "actor": "operator",
+      "kind": "session.created",
+      "provenance": "operator_decision",
+      "summary": "Task created: compare source_unavailable",
+      "data": {
+        "expected_result": "draft",
+        "request": {
+          "description": "compare source_unavailable",
+          "expected_result": "draft",
+          "item_id": "item-usbc-adapter",
+          "item_name": "USB-C adapter (USB-C male to USB-A female, 3A)",
+          "quantity": 20
+        }
+      },
+      "prev_hash": "genesis",
+      "hash": "042aa225a1c565566b30d5222708516dfa63351fe4a0cf66395c23c92ea7da4b"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 2,
+      "at": "2026-11-07T18:36:02.226Z",
+      "actor": "coordinator",
+      "kind": "plan.proposed",
+      "provenance": "agent_statement",
+      "summary": "Coordinator proposed 2 research subtask(s): Worker A → Research BrightOffice Supplies; Worker B → Research Kartik Electronics Wholesale",
+      "data": {
+        "rationale": "Each worker researches one vendor in parallel (2 vendors, 2 workers). Work is split by vendor so every finding has one clear author.",
+        "subtasks": [
+          {
+            "label": "Worker A",
+            "source_ids": [
+              "src-source-unavailable-bo-page"
+            ],
+            "task_id": "tsk_e34f7a22b6bd",
+            "title": "Research BrightOffice Supplies",
+            "vendor_id": "v-brightoffice",
+            "worker_id": "worker-a"
+          },
+          {
+            "label": "Worker B",
+            "source_ids": [
+              "src-source-unavailable-ke-page"
+            ],
+            "task_id": "tsk_30c16cf89c56",
+            "title": "Research Kartik Electronics Wholesale",
+            "vendor_id": "v-kartik",
+            "worker_id": "worker-b"
+          }
+        ]
+      },
+      "prev_hash": "042aa225a1c565566b30d5222708516dfa63351fe4a0cf66395c23c92ea7da4b",
+      "hash": "fbc4ca498e9ea93ff4388155e7c662f2cafff7255f9c6ab36f9114519fb4ad29"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 3,
+      "at": "2026-11-07T18:36:02.227Z",
+      "actor": "operator",
+      "kind": "session.started",
+      "provenance": "operator_decision",
+      "summary": "You started the task with 2 worker(s); deadline 2026-11-07T18:46:02.227Z",
+      "data": {
+        "scope_policy_version": 1
+      },
+      "prev_hash": "fbc4ca498e9ea93ff4388155e7c662f2cafff7255f9c6ab36f9114519fb4ad29",
+      "hash": "d3d1378d6e404d646576d4d7d6c15571dd32699686cdd7905e413688fdc6606f"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 4,
+      "at": "2026-11-07T18:36:02.260Z",
+      "actor": "worker-a",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker A opens supplier page → http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "data": {
+        "action_id": "act_02b9ecb95ea1",
+        "action_type": "browser.navigate",
+        "decision": "ALLOW",
+        "reason": "Approved supplier page within this task’s scope.",
+        "reason_code": "approved_source",
+        "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301"
+      },
+      "prev_hash": "d3d1378d6e404d646576d4d7d6c15571dd32699686cdd7905e413688fdc6606f",
+      "hash": "3b2f282aea6df69e5d0b9bcd023c1e5167991af07ada3cee007f6f3829ce2923"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 5,
+      "at": "2026-11-07T18:36:02.260Z",
+      "actor": "worker-b",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker B opens supplier page → http://127.0.0.1:4600/catalog/source_unavailable/v-kartik/ke-usbca-3a",
+      "data": {
+        "action_id": "act_82bb5e3b2c51",
+        "action_type": "browser.navigate",
+        "decision": "ALLOW",
+        "reason": "Approved supplier page within this task’s scope.",
+        "reason_code": "approved_source",
+        "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-kartik/ke-usbca-3a"
+      },
+      "prev_hash": "3b2f282aea6df69e5d0b9bcd023c1e5167991af07ada3cee007f6f3829ce2923",
+      "hash": "55e1a38dbc6adf4b4ca74bf2b1cf1da4eab81ef02b2b13b7cfc356675cf5777a"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 6,
+      "at": "2026-11-07T18:36:02.277Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: source src-source-unavailable-ke-page unavailable (HTTP 503), retrying",
+      "data": {
+        "attempt": 0
+      },
+      "prev_hash": "55e1a38dbc6adf4b4ca74bf2b1cf1da4eab81ef02b2b13b7cfc356675cf5777a",
+      "hash": "5b1982677a35af4f63e29d1e8c7bb8bedbf59a8270517af9fa96dd3117ec2518"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 7,
+      "at": "2026-11-07T18:36:02.279Z",
+      "actor": "worker-a",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker A reads page → http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+      "data": {
+        "action_id": "act_36c60350a233",
+        "action_type": "browser.read",
+        "decision": "ALLOW",
+        "reason": "Approved supplier page within this task’s scope.",
+        "reason_code": "approved_source",
+        "resource": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301"
+      },
+      "prev_hash": "5b1982677a35af4f63e29d1e8c7bb8bedbf59a8270517af9fa96dd3117ec2518",
+      "hash": "59d6873c9cc8db3664f9f78c8e1071473ffbfee7b4ea20faafc406b50e8ead19"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 8,
+      "at": "2026-11-07T18:36:02.284Z",
+      "actor": "worker-a",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker A records finding → src-source-unavailable-bo-page",
+      "data": {
+        "action_id": "act_e3637716caea",
+        "action_type": "finding.record",
+        "decision": "ALLOW",
+        "reason": "Recording a structured finding is part of research.",
+        "reason_code": "in_scope",
+        "resource": "src-source-unavailable-bo-page"
+      },
+      "prev_hash": "59d6873c9cc8db3664f9f78c8e1071473ffbfee7b4ea20faafc406b50e8ead19",
+      "hash": "6783f147f78d48798b62a58e8f40faa6a739b8df128a04bac1fe8d459391f0f6"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 9,
+      "at": "2026-11-07T18:36:02.284Z",
+      "actor": "worker-a",
+      "kind": "finding.recorded",
+      "provenance": "agent_statement",
+      "summary": "Worker A reports bo-uc-301: ₹450, 120 in stock",
+      "data": {
+        "author_agent": "worker-a",
+        "captured_at": "2026-11-07T18:36:02.283Z",
+        "currency": "INR",
+        "extracted_by": "local-rules",
+        "finding_id": "fnd_f1031f74f653",
+        "limitations": [],
+        "product_id": "bo-uc-301",
+        "product_title": "BrightOffice UC-301 USB-C to USB-A adapter, 3A",
+        "screenshot": null,
+        "shipping_minor": 0,
+        "source_id": "src-source-unavailable-bo-page",
+        "source_url": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301",
+        "source_version": 1,
+        "status": "observed",
+        "stock_qty": 120,
+        "stock_status": "in_stock",
+        "task_id": "tsk_e34f7a22b6bd",
+        "tax_included": true,
+        "unit_price_minor": 45000,
+        "untrusted_page_text": null,
+        "vendor_id": "v-brightoffice"
+      },
+      "prev_hash": "6783f147f78d48798b62a58e8f40faa6a739b8df128a04bac1fe8d459391f0f6",
+      "hash": "cbf325825521c3f3649da89dd17aec9d7403c368b12982ef55a248477919e729"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 10,
+      "at": "2026-11-07T18:36:02.285Z",
+      "actor": "worker-a",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker A saves candidate findings → candidate-findings.json",
+      "data": {
+        "action_id": "act_bbb43b8abda6",
+        "action_type": "artifact.write_candidate",
+        "decision": "ALLOW",
+        "reason": "Saving a candidate result in the worker’s own task folder.",
+        "reason_code": "own_task_folder",
+        "resource": "candidate-findings.json"
+      },
+      "prev_hash": "cbf325825521c3f3649da89dd17aec9d7403c368b12982ef55a248477919e729",
+      "hash": "0469bb6a3f13d1a6e92f81e5a2c2d71b50c4336f29ba54848e15161a8e3b6b96"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 11,
+      "at": "2026-11-07T18:36:02.285Z",
+      "actor": "worker-a",
+      "kind": "artifact.saved",
+      "provenance": "observed",
+      "summary": "Worker A saved candidate findings (1)",
+      "data": {
+        "id": "art_426fca8915a5",
+        "rel_path": "files/worker-a/candidate-findings.json",
+        "sha256": "9f6d7bea6bae8faf195abd22ac9746102ce5c3e7c4cf9f6533e11d3c6d30a6c6"
+      },
+      "prev_hash": "0469bb6a3f13d1a6e92f81e5a2c2d71b50c4336f29ba54848e15161a8e3b6b96",
+      "hash": "876e741f81be3a4d5eb1a71e5aca07ac0fd9b56972178c18a9dd07abc69cda78"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 12,
+      "at": "2026-11-07T18:36:03.499Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: source src-source-unavailable-ke-page unavailable (HTTP 503), retrying",
+      "data": {
+        "attempt": 1
+      },
+      "prev_hash": "876e741f81be3a4d5eb1a71e5aca07ac0fd9b56972178c18a9dd07abc69cda78",
+      "hash": "53b6a4891d08622f7520b8e77cc02527d16cb6e90be55f35b5519de174b91d7e"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 13,
+      "at": "2026-11-07T18:36:04.718Z",
+      "actor": "worker-b",
+      "kind": "worker.activity",
+      "provenance": "observed",
+      "summary": "Worker B: Source unavailable: HTTP 503 after 3 attempts.",
+      "data": {
+        "source_id": "src-source-unavailable-ke-page"
+      },
+      "prev_hash": "53b6a4891d08622f7520b8e77cc02527d16cb6e90be55f35b5519de174b91d7e",
+      "hash": "475fc20d4b632dfef1141e2323dcf18a8424cf4f2199df6587ea3d7d2b601cbb"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 14,
+      "at": "2026-11-07T18:36:04.718Z",
+      "actor": "worker-b",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Worker B saves candidate findings → candidate-findings.json",
+      "data": {
+        "action_id": "act_ee6e0d171c2d",
+        "action_type": "artifact.write_candidate",
+        "decision": "ALLOW",
+        "reason": "Saving a candidate result in the worker’s own task folder.",
+        "reason_code": "own_task_folder",
+        "resource": "candidate-findings.json"
+      },
+      "prev_hash": "475fc20d4b632dfef1141e2323dcf18a8424cf4f2199df6587ea3d7d2b601cbb",
+      "hash": "95a2c88702b8cfa18a304b978f935297eaedd22b7507817b4e8b3dfa16dfb95e"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 15,
+      "at": "2026-11-07T18:36:04.719Z",
+      "actor": "worker-b",
+      "kind": "artifact.saved",
+      "provenance": "observed",
+      "summary": "Worker B saved candidate findings (1)",
+      "data": {
+        "id": "art_1cf823eb3197",
+        "rel_path": "files/worker-b/candidate-findings.json",
+        "sha256": "1202fa6f27e0e9f5005955337731792802886fb30f675627918f7282c0ec534e"
+      },
+      "prev_hash": "95a2c88702b8cfa18a304b978f935297eaedd22b7507817b4e8b3dfa16dfb95e",
+      "hash": "27f130a118bd0839e245c71c60ccd487003044ce59125d4240dd3d4254b67b4f"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 16,
+      "at": "2026-11-07T18:36:04.723Z",
+      "actor": "coordinator",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Coordinator publishes the comparison → comparison.json",
+      "data": {
+        "action_id": "act_d9317168591a",
+        "action_type": "artifact.publish_local",
+        "decision": "ALLOW",
+        "reason": "The coordinator publishes the comparison and draft for this task.",
+        "reason_code": "coordinator_publish",
+        "resource": "comparison.json"
+      },
+      "prev_hash": "27f130a118bd0839e245c71c60ccd487003044ce59125d4240dd3d4254b67b4f",
+      "hash": "cd9a0c0460be8cc183bc03e1369452112e0a34b1a1f8adb182a5f845c1f0b9bb"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 17,
+      "at": "2026-11-07T18:36:04.724Z",
+      "actor": "coordinator",
+      "kind": "artifact.published",
+      "provenance": "observed",
+      "summary": "Comparison published (1 vendor rows, 1 unresolved, 1 warnings)",
+      "data": {
+        "artifact": {
+          "id": "art_5d4e4ab90d78",
+          "rel_path": "files/coordinator/comparison.json",
+          "sha256": "60d9d891bab3a06709e40fefb306c3bbd3557963308b1c1886b69f625ae0ad9d"
+        }
+      },
+      "prev_hash": "cd9a0c0460be8cc183bc03e1369452112e0a34b1a1f8adb182a5f845c1f0b9bb",
+      "hash": "43ce05485dad04e217b08fdd4960292ba9b88ec8376abe66d5b018da5dbb5b48"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 18,
+      "at": "2026-11-07T18:36:04.724Z",
+      "actor": "coordinator",
+      "kind": "policy.decision",
+      "provenance": "policy_decision",
+      "summary": "Allowed: Coordinator prepares a purchase-request draft → draft.json",
+      "data": {
+        "action_id": "act_0032de0194c7",
+        "action_type": "request.prepare",
+        "decision": "ALLOW",
+        "reason": "Preparing a draft is allowed. A draft is not a submission.",
+        "reason_code": "draft_in_scope",
+        "resource": "draft.json"
+      },
+      "prev_hash": "43ce05485dad04e217b08fdd4960292ba9b88ec8376abe66d5b018da5dbb5b48",
+      "hash": "0a7d5cef46f5c8c094331934830910630b0cabcddc66e4816616ae5d442e5182"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 19,
+      "at": "2026-11-07T18:36:04.725Z",
+      "actor": "coordinator",
+      "kind": "artifact.published",
+      "provenance": "observed",
+      "summary": "Draft prepared: BrightOffice Supplies, 20 × ₹450 = ₹9,000 (not submitted)",
+      "data": {
+        "artifact": {
+          "id": "art_f57d2c52e254",
+          "rel_path": "files/coordinator/draft.json",
+          "sha256": "83fbaa01f5554d56a6e6cab9a6572bbebcabf60ddd122d1685358ef8100f37e3"
+        }
+      },
+      "prev_hash": "0a7d5cef46f5c8c094331934830910630b0cabcddc66e4816616ae5d442e5182",
+      "hash": "4d64a61481fec71798ee3ddc6e95b44e9869bdc6e0ff527fb175b18b97ab96e1"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 20,
+      "at": "2026-11-07T18:36:04.727Z",
+      "actor": "verifier",
+      "kind": "verification.result",
+      "provenance": "observed",
+      "summary": "comparison: partial — 1 vendor(s) verified; 1 source(s) unresolved",
+      "data": {
+        "deliverable": "comparison",
+        "failed": [
+          {
+            "detail": "src-source-unavailable-ke-page: Source unavailable: HTTP 503 after 3 attempts.",
+            "name": "unresolved_sources",
+            "status": "unverified"
+          }
+        ],
+        "status": "partial"
+      },
+      "prev_hash": "4d64a61481fec71798ee3ddc6e95b44e9869bdc6e0ff527fb175b18b97ab96e1",
+      "hash": "670fcb926b34aae099d72792e797e8f1c4b6cd069b0044e457d9f552f12c67c5"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 21,
+      "at": "2026-11-07T18:36:04.727Z",
+      "actor": "verifier",
+      "kind": "verification.result",
+      "provenance": "observed",
+      "summary": "draft: verified — Draft for ₹9,000 is consistent",
+      "data": {
+        "deliverable": "draft",
+        "failed": [],
+        "status": "verified"
+      },
+      "prev_hash": "670fcb926b34aae099d72792e797e8f1c4b6cd069b0044e457d9f552f12c67c5",
+      "hash": "edaeb9383ebcc81fddf6bfb5ec5806e6b80dc8e2613a5ee83da54d3844dc7dcd"
+    },
+    {
+      "session_id": "ses_04c0740c6481",
+      "seq": 22,
+      "at": "2026-11-07T18:36:04.728Z",
+      "actor": "controller",
+      "kind": "session.outcome",
+      "provenance": "observed",
+      "summary": "Outcome: Partly verified — Some deliverables are verified; others are unresolved or incomplete.",
+      "data": {
+        "decided_at": "2026-11-07T18:36:04.728Z",
+        "decided_by": "controller (from verification results)",
+        "deliverables": {
+          "comparison": "partial",
+          "draft": "verified"
+        },
+        "label": "Partly verified",
+        "status": "PARTIAL",
+        "summary": "Some deliverables are verified; others are unresolved or incomplete."
+      },
+      "prev_hash": "edaeb9383ebcc81fddf6bfb5ec5806e6b80dc8e2613a5ee83da54d3844dc7dcd",
+      "hash": "9d06cf6bae40b2051fc0ebaf1a8bd6e8d4d41f357fd98d436598db415497ae5d"
+    }
+  ]
+}

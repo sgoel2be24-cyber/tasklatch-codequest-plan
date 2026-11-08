@@ -1,0 +1,35 @@
+{
+  "DownloadRestrictions": 3,
+  "DeveloperToolsAvailability": 1,
+  "PasswordManagerEnabled": false,
+  "AutofillAddressEnabled": false,
+  "AutofillCreditCardEnabled": false,
+  "BrowserSignin": 0,
+  "SyncDisabled": true,
+  "PromptForDownloadLocation": false,
+  "DefaultBrowserSettingEnabled": false,
+  "MetricsReportingEnabled": false,
+  "TranslateEnabled": false,
+  "URLBlocklist": [
+    "chrome://*",
+    "devtools://*",
+    "file://*",
+    "javascript://*",
+    "view-source:*"
+  ],
+  "URLAllowlist": [
+    "chrome://newtab",
+    "chrome://new-tab-page"
+  ],
+  "SearchSuggestEnabled": false,
+  "ComponentUpdatesEnabled": false,
+  "BackgroundModeEnabled": false,
+  "NetworkPredictionOptions": 2,
+  "SafeBrowsingProtectionLevel": 0,
+  "SpellCheckServiceEnabled": false,
+  "UrlKeyedAnonymizedDataCollectionEnabled": false,
+  "BrowserNetworkTimeQueriesEnabled": false,
+  "ShoppingListEnabled": false,
+  "PromotionalTabsEnabled": false,
+  "AutoplayAllowed": false
+}
