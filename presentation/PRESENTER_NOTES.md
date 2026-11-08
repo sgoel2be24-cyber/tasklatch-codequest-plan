@@ -1,79 +1,75 @@
 # TaskLatch presenter notes
 
-All capabilities and targets are proposed unless explicitly described as sourced evidence.
+Content revision: problem on slide 2, proposed solution and USP on slide 3. All capabilities and targets remain planned unless explicitly identified as sourced evidence.
 
 ## 1. TaskLatch
 
-TaskLatch is an independently planned local computer-agent control project. The idea is to keep delegated browser work useful while putting consequential actions behind controller-enforced permissions, shared resource limits and independent outcome verification. The working scope is two local desktop workers, one synthetic supplier workflow and no mandatory paid infrastructure. Team name and presenter are provided by the user. Cover illustration is AI-generated conceptual art, not evidence of an implemented application.
+TaskLatch is Team Update’s proposed local workspace for AI desktop agents. Two workers will research suppliers while a separate controller enforces permissions, a shared resource allowance and independent completion checks. Presenter: Shikhar. This is an idea-stage proposal, not an implemented or benchmarked system. Opticon is an attributed orchestration reference.
 
-- CodeQuest official requirements: https://unstop.com/hackathons/codequest-national-tech-hackathon-2026-dotrepo-1771441/amp
-- Opticon reference: https://github.com/23jmo/opticon
+- https://unstop.com/hackathons/codequest-national-tech-hackathon-2026-dotrepo-1771441/amp
+- https://github.com/23jmo/opticon
 
-## 2. Delegation can outgrow permission
+## 2. The failures we aim to prevent
 
-The headline is a survey finding, not a measured incident rate per task. CSA surveyed 418 IT and security professionals in January 2026, with Token Security funding and co-developing the questionnaire. Sixty-five percent reported an incident involving AI agents or autonomous workflows in the prior twelve months. Among incident-affected respondents, 35 percent reported financial cost, but the source does not establish an average dollar loss. Do not extrapolate a market-wide loss. The three examples at right are the proposed product problem boundaries. Demand for the specific small-team supplier workflow remains a user-research hypothesis. We exclude the unverified viral Clawdbot purchase anecdote from headline evidence.
+The problem is a gap between a delegated task and the authority, resource use and actual result of an agent run. The first user and supplier workflow are proposed, not validated customer demand. We will target three observable failures: a purchase-request write outside exact user approval, parallel work exceeding the shared allowance, and a success status despite missing or incorrect saved output. These risks are conditional on the integration and permissions, not claims that every agent product lacks controls. The reviewed Opticon worker source and demonstration motivate independent verification, but they are not a full security audit. Supporting industry evidence: a CSA / Token Security January 2026 survey of 418 IT/security respondents found that 65% reported an agent or autonomous-workflow incident in the preceding year. It is self-reported, broadly defined, vendor-funded and does not establish a per-task incident rate or average monetary loss. The problem statement, rather than that statistic, leads the slide.
 
-- CSA announcement: https://cloudsecurityalliance.org/press-releases/2026/04/21/new-cloud-security-alliance-survey-reveals-82-of-enterprises-have-unknown-ai-agents-in-their-environments
-- First-party incident account, separate qualitative evidence: https://www.saastr.com/replits-new-release-address-most-of-the-challenges-we-hit-vibe-coding-but-is-prosumer-vibe-coding-really-ready-for-commercial-apps-yet/
+- Industry evidence: https://cloudsecurityalliance.org/press-releases/2026/04/21/new-cloud-security-alliance-survey-reveals-82-of-enterprises-have-unknown-ai-agents-in-their-environments
+- Reviewed reference: https://github.com/23jmo/opticon/blob/ce4d098ed5ba86e564da72ddb816716b4b72c602/workers/worker.py
+- Reference demonstration: https://www.youtube.com/watch?v=Sc6lU9XTJmo
 
-## 3. Supplier research with a controlled handoff
+## 3. TaskLatch: controlled desktop agents
 
-The initial workflow deliberately stops at a purchase request in a local fixture application, not an actual purchase or external email. SupplierLab will contain synthetic vendor pages and a local request database. Two workers research in parallel. Their browser sessions have read authority only. They produce citations, comparison data and a draft. Only a controller-owned action broker can create the final test request after exact approval. A separate verification read checks the receipt and its expected fields. This makes the important boundary observable without spending money or giving the agent access to personal accounts. User frequency and willingness to adopt still require interviews.
-
-
-
-## 4. Bounded work, from request to receipt
-
-These are the three core additions, not an invitation to add a large feature catalogue. Exact approvals, budgets and runtime controls already exist in other products. Our proposed contribution is their coherent application to a small, locally runnable computer-agent workflow with a clear controlled commit and evidence of the outcome. Policy is enforced by the controller and request service, rather than by hoping a system prompt will be obeyed. A reservation ledger accounts for concurrent workers. Verification is separate from the worker narrative. Evidence must include useful task completion as well as prevention. All capabilities on this slide are proposed.
-
-- Comparable approval pattern: https://docs.permit.io/permit-mcp-gateway/human-in-the-loop
-- Comparable runtime policies: https://docs.nvidia.com/openshell/how-it-works/policies/overview
-
-## 5. Approval binds to the exact action
-
-This is an illustrative action, not a screenshot or test result. The broker canonicalizes the destination, action type, resource, exact payload, relevant policy version and idempotency key. A user approval records the bound hash and expiry. The broker consumes approval atomically and checks it again immediately before the write. Editing quantity, price, destination or policy invalidates the approval. Retries cannot reuse a consumed approval to create a second request. The backend must enforce write authority independently of the browser UI. Workers have no write token and no route that bypasses the broker. Approval identity, expiry, denial, duplicate submission, race conditions and time-of-check/time-of-use changes are part of the evaluation cases. The sample arithmetic is 20 multiplied by 450 equals 9,000.
+This is the proposed solution, not a screenshot of an existing product. The user sets the task, allowed sources and shared resource limits. Two local workers research read-only synthetic vendor pages and produce a comparison and draft request. The controller presents the exact destination, vendor, quantity, unit price and final total for user approval. The write broker submits only that exact approved operation. A separate verifier reads the stored receipt and checks its fields and the saved report before the UI can claim success. Rejection, changed content or expired approval prevents submission and triggers fresh review when appropriate. Resource reservations apply to the coordinator, both workers, model calls and retries throughout the run, rather than only at a single step. Unknown and failed results remain distinct from success. The workflow integration is our proposed USP; authorization, runtime controls and tracing are established categories.
 
 
 
-## 6. Desktop delegation with enforceable boundaries
+## 4. Existing capabilities and our contribution
 
-This comparison describes documented product scope, not an independently benchmarked ranking or a claim that competitors cannot add the proposed workflow. Opticon is the direct orchestration reference. A static review at commit ce4d098ed5ba86e564da72ddb816716b4b72c602 and its demonstration showed task approval, desktop orchestration and replay. The reviewed worker emits completion events after certain error paths, so independent verification is a concrete area to improve in our own implementation. This is not a full Opticon security audit. E2B is excluded because this user account requires a verification payment, regardless of public credit wording. Permit and LangGraph already support approval patterns. LiteLLM covers model traffic. OpenShell explicitly documents filesystem, network and process policy, while Zenity makes directly overlapping runtime-control claims. We must earn differentiation through the specific workflow, transparent boundaries and evaluation, not a first-ever claim. Opticon source reuse rights and notices must be verified before any copying. Baseline will be our own Opticon-inspired loop, not an unchanged Opticon benchmark.
+This is a scope comparison based on primary documentation, not an independently benchmarked competitor ranking. TaskLatch does not claim to invent approvals, budgets, sandboxing or runtime policy. Opticon is the direct parallel-desktop and task-approval reference. TaskLatch’s proposed original work is the independently implemented controller, SupplierLab’s enforced write boundary, structured approval/action/result evidence and paired evaluation against our own baseline loop. Permit and LangGraph already provide integrated authorization and approval patterns. LiteLLM already covers model-traffic budgeting. OpenShell documents filesystem, process and network policy, while Zenity makes directly overlapping runtime-control claims. Our desktop workflow must integrate the controls and prove useful completion as well as blocked forbidden writes. Source reuse requires license and notice verification before copying. The initial version is a focused local prototype, not a universal security gateway.
 
-- Opticon: https://github.com/23jmo/opticon
-- Opticon demo: https://www.youtube.com/watch?v=Sc6lU9XTJmo
-- E2B: https://e2b.dev/pricing
-- Permit: https://docs.permit.io/permit-mcp-gateway/human-in-the-loop
-- LangGraph: https://docs.langchain.com/oss/python/langchain/human-in-the-loop
-- LiteLLM: https://docs.litellm.ai/docs/proxy/architecture
-- OpenShell: https://docs.nvidia.com/openshell/how-it-works/policies/overview
-- Zenity: https://zenity.io/platform/runtime-boundaries
+- https://github.com/23jmo/opticon
+- https://docs.permit.io/permit-mcp-gateway/human-in-the-loop
+- https://docs.langchain.com/oss/python/langchain/human-in-the-loop
+- https://docs.litellm.ai/docs/proxy/architecture
+- https://docs.nvidia.com/openshell/how-it-works/policies/overview
+- https://zenity.io/platform/runtime-boundaries
 
-## 7. Two local desktops, one trusted controller
+## 5. Local architecture and enforcement
 
-A dedicated local Colima Linux VM hosts two Linux desktop containers. These are not separate cloud machines or separate microVMs per agent. The host must remain awake and performance is untested. The controller remains outside worker authority and retains provider credentials. Worker screenshots and read actions are structured inputs. Browser mutation is disabled by server authorization, not by hiding a button. The controller broker is the only write principal. The initial runtime spike must prove screenshot, click/type, independent noVNC views and reliable stop for both workers without personal home shares, personal browser profiles or daemon sockets. Containers share the VM kernel, so this is a constrained prototype boundary, not a claim of complete malware isolation. Candidate NVIDIA model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning. Image input, structured actions and actual key limits require testing. A local model adapter seam and runtime adapter seam allow future alternatives, but cloud portability is not implemented.
+This diagram is the proposed architecture. It is not a claim that the runtime has been started or tested. The React/TypeScript/Vite interface communicates with a separate Node.js controller over HTTP/WebSocket for approvals, status and control. Zod validates structured action and result schemas. The controller orchestrates a dedicated Colima Linux VM containing two desktop containers, running Chromium, Playwright, Xvfb and noVNC. Desktop commands and screenshots pass through the controller. The NVIDIA key stays with the controller, which sends screenshots to an image-capable model and validates returned action proposals. Candidate: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning. Image input, reliable structured actions, actual key access and usage limits require a capability probe. The worker browser identity has read authority only. SupplierLab’s server allows a write only from the controller broker after authorization, so a direct browser form or HTTP request cannot bypass review. SQLite holds request/receipt and trusted control state. The verifier uses an independent read of saved state. Containers share the VM kernel, so this is not a separate microVM per worker or production malware-isolation claim. No host-home shares, personal browser profiles, provider keys or daemon sockets enter the workers.
 
-- Colima: https://github.com/abiosoft/colima
-- Docker security: https://docs.docker.com/engine/security/
-- NVIDIA candidate: https://build.nvidia.com/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+- https://github.com/abiosoft/colima
+- https://docs.docker.com/engine/security/
+- https://build.nvidia.com/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
 
-## 8. Useful completion must survive the controls
+## 6. Build sequence and completion evidence
 
-The detailed evaluation protocol is docs/EVALUATION_PLAN.md. The 34 deterministic cases cover approval identity, changes and expiry; concurrent reservations; verification of missing or incorrect receipts; untrusted content; operational stop and recovery; and cost reporting. Seventy-two planned model-backed sessions means six benign tasks plus six challenge tasks, each repeated three times in two modes. Modes are our own baseline loop and the controlled TaskLatch mode. These are repeated sessions over 12 scenarios, not 72 independent task designs. Record actual denominators, blocked action attempts, legitimate completion, false blocks, false success, approval burden, resource usage, overhead and stop latency. Targets shown are release aspirations, not measurements or guarantees. A stop target of five seconds applies only under the defined prototype workload. There must be no claim of safety based on blocking every task. Store raw evidence and preserve failure cases. On a free endpoint, financial-cap tests use an explicitly simulated tariff; no measured dollar savings should be claimed. Run feasibility and model checks before committing to the full model-backed batch.
+These are proposed milestones for the event’s 2–15 November prototype window. The first milestone must prove that the existing laptop can run two desktops, produce screenshots, execute structured actions and stop workers, while a real NVIDIA key confirms image access, usage metadata and practical request limits. No model key has yet been supplied or tested. Do not promise reliable computer use from the model page alone. The next milestone builds SupplierLab and the external authorization boundary, followed by shared reservations, an independent stop path and receipt verification. The final milestone runs the evaluation protocol and packages reproducible setup, failure evidence and a labelled recorded fallback. The zero-cash baseline assumes the existing laptop, internet and usable NVIDIA free access. E2B is excluded because this user account requires a verification payment. Fireworks stays off unless credits and spending authorization are confirmed. If model or hardware gates fail, record the limitation rather than substituting a billable dependency or pretending a scripted path is a live agent result. The schedule is an implementation plan, not completed progress.
+
+- https://unstop.com/hackathons/codequest-national-tech-hackathon-2026-dotrepo-1771441/amp
+- https://build.nvidia.com/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+- https://docs.api.nvidia.com/nim/docs/run-anywhere
+- https://fireworks.ai/pricing
+
+## 7. Expected impact and beneficiaries
+
+The initial beneficiary segments and adoption assumptions have not been validated through user research. The proposed benefit is narrower authority and resource use while retaining useful supplier research. The evaluation will count actual forbidden writes and rejected attempts, not merely model refusals. It will report resource reservations, reconciled consumption and stopping latency. Independent receipt and report checks will expose false success. Measure operator review time and false blocks as usability costs, so preventing every action does not masquerade as useful impact. No financial saving, percentage incident reduction, customer traction or production-readiness result is claimed. Real-world impact and demand require later user testing. The first prototype uses synthetic vendors and purchase requests in SupplierLab.
 
 
 
-## 9. A zero-cash prototype with early gates
+## 8. Example: a ₹9,000 test purchase request
 
-The baseline requires no mandatory cash payment for cloud desktops or application hosting. This assumes existing laptop and internet access, working local runtime support and usable NVIDIA free hosted endpoint access. Electricity and internet are not represented as literally costless resources. NVIDIA free access is quota- and availability-dependent, not an unlimited production entitlement. No key has been supplied or tested. Fireworks API calls are usage billed and remain disabled unless credits and spending authorization are confirmed. E2B is not a dependency because the actual user account is payment blocked. Dollar-budget scenarios use simulated tariffs, while actual request and token counters are measured. If vision or structured action tests fail, do not silently claim computer-use support or switch to a billable provider. Record the limitation and use the deterministic fixture to establish control logic while the provider gate is resolved. Detailed backlog, dependency order, acceptance criteria and hardware constraints are in the project plan. The prototype window follows the event listing and should be rechecked before submission.
+This example is a design contract, not a test result or actual purchase. Twenty adapters at ₹450 each totals ₹9,000, including tax and with no shipping charge. Exact approval binds the action type, destination, supplier/resource version, payload, policy version and idempotency key. It expires after the proposed 60-second review window and is single-use. The controller rechecks authorization at execution and consumes it atomically. A changed quantity of 21 would imply a different total and a different payload, so old approval must not authorize it. Direct worker writes, expired approvals and token replay must fail at SupplierLab’s server boundary. A matching persisted receipt is necessary before success. If an acknowledgement is lost after a write, read by idempotency key before retrying to avoid duplicate requests.
 
-- Event: https://unstop.com/hackathons/codequest-national-tech-hackathon-2026-dotrepo-1771441/amp
-- NVIDIA candidate: https://build.nvidia.com/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
-- NIM access: https://docs.api.nvidia.com/nim/docs/run-anywhere
-- Fireworks pricing: https://fireworks.ai/pricing
 
-## 10. Delegated work with a reviewable outcome
 
-Expected beneficiaries are hypotheses, not validated customer segments. Intended impact is fewer unauthorized writes and fewer false completion reports while retaining acceptable legitimate completion and approval effort. The prototype must show both the successful path and blocked/error paths, with inspectable action records, receipt checks and actual metric denominators. Do not present projected financial savings, customer counts or production safety guarantees. Scalability is an architectural path through runtime and action adapters, not a claim that this laptop prototype scales to an enterprise fleet. The local first version is intentionally constrained to two workers and one workflow. Team Update will independently implement the project and disclose Opticon inspiration. Source reuse requires license verification and notices. The judging criteria have not been given numerical weights; the deck maps visibly to the official required topics without inventing scores.
+## 9. Tests and acceptance targets
 
-- Originality and required topics: https://unstop.com/hackathons/codequest-national-tech-hackathon-2026-dotrepo-1771441/amp
-- Orchestration inspiration: https://github.com/23jmo/opticon
+All figures are planned experiment sizes and internally chosen engineering targets, not measured results or official judging weights. The detailed protocol is docs/EVALUATION_PLAN.md. The 34 deterministic cases cover approval changes, expiry, identity and replay, direct-write bypass, concurrent reservations, stopping, missing or invalid receipts, untrusted page findings and operator access. The 72 planned model sessions consist of six benign and six challenge scenarios, each repeated three times in two modes. Our baseline is an independently built Opticon-inspired loop, not unmodified Opticon. Both modes use the same synthetic fixture tasks, versions and resource ceilings. Count meaningful benign completion as verified correct deliverables over all benign sessions, and report false blocks. Distinguish attempted forbidden writes, policy denials and actual resource changes. Zero observed failures in a small set does not prove universal prevention. The five-second stopping target applies to the defined local workload and requires independent process-exit timestamps, separate from the time the controller refuses new work. Report actual executed counts, timeouts, provider failures and missing token usage. If free access limits prevent the planned batch, explicitly report incompleteness. Preserve raw failures and avoid changing targets after results are known.
+
+
+
+## 10. Planned prototype demonstration
+
+The final prototype should show a useful successful task and controlled failure paths, not just a safety dashboard. In the normal path, the two desktops produce supplier comparisons, the user approves an exact request, the controller submits it and the verifier reads a matching saved receipt. In the changed-request case, the attempted mutation must not create a changed request. In the retry case, the shared reservation ledger and independent stop path must prevent new work after the allowance is exhausted. In the missing-result case, the UI must preserve unverified/failed status rather than accepting an agent success message. Show action, approval, budget, result and verification evidence. These are expected demonstrations, not completed tests. All business data is synthetic and no real purchases, production credentials or external email are involved. Actual model request/token counts are measured when the provider reports them. Currency-budget scenarios use explicitly simulated tariffs, not an invoice or measured financial savings. E2B is excluded, Fireworks is off without confirmed credit/spending authorization, and NVIDIA free endpoint access remains dependent on a real-key capability/limit test. Cloud runtimes and new business integrations are later extensions after the local boundary works.
+

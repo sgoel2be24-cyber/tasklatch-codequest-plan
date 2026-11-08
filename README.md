@@ -18,6 +18,7 @@ TaskLatch is a proposed workspace for two AI agents working in local Linux deskt
 - [Prototype backlog](docs/PROTOTYPE_BACKLOG.md): implementation order with concrete acceptance criteria.
 - [Final editable presentation](presentation/output/TaskLatch-CodeQuest-2026.pptx): 10 slides with Team Update and Shikhar, editable tables, source-linked speaker notes, and the planned evaluation.
 - [Presenter notes](presentation/PRESENTER_NOTES.md): the full narrative and source links, also embedded in the PPTX.
+- [Slide content](presentation/SLIDE_CONTENT.md): concise slide-by-slide copy, with the problem on slide 2 and proposed solution/USP on slide 3.
 - [Presentation source and checks](presentation/README.md): authoring files, asset provenance, and validation scope.
 
 ## Current boundaries
