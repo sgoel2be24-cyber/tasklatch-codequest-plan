@@ -20,7 +20,8 @@ import { saveArtifact, readArtifact, latestArtifact } from './storage.ts';
 import { loadSession, setTask, setWorker, tasksFor } from './state.ts';
 import { readCatalog } from './supplierlab-client.ts';
 import { PROVIDER, providerRecord, paidTokenCeiling } from './provider.ts';
-import { proposeDesktopPlan, researchOnDesktops, stopDesktops, supplierCandidatesFromDesktops, buildWebReport, desktopLiveInfo } from './desktop-sessions.ts';
+import { proposeDesktopPlan, refineDesktopPlan, normalizeWebPlan, MAX_SUBTASKS, researchOnDesktops, stopDesktops, supplierCandidatesFromDesktops, buildWebReport, desktopLiveInfo } from './desktop-sessions.ts';
+import { normalizeSite, hostAllowed } from './policy.ts';
 import type { ContainerDesktop } from './desktops.ts';
 import { verifyReport } from './verifier.ts';
 
@@ -129,7 +130,7 @@ function applyPlan(id: string, plan: { subtasks: any[]; rationale: string }, bum
       assignments[t.worker_id] = t.source_ids;
       for (const sid of t.source_ids) owner[sid] = t.worker_id;
       run('INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?)', t.task_id, id, 'research', t.worker_id, t.title, 'ready', null, JSON.stringify(t.source_ids), nowIso(), ord++);
-      run('INSERT INTO workers (session_id, worker_id, label, status, activity, updated_at) VALUES (?,?,?,?,?,?)', id, t.worker_id, t.label, 'idle', 'Waiting to start', nowIso());
+      run('INSERT OR IGNORE INTO workers (session_id, worker_id, label, status, activity, updated_at) VALUES (?,?,?,?,?,?)', id, t.worker_id, t.label, 'idle', 'Waiting to start', nowIso());
     }
     if (s.scope.mode === 'web') {
       run('INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?)', newId('tsk'), id, 'report', 'coordinator', 'Assemble a cited report', 'ready', null, null, nowIso(), ord++);
@@ -202,7 +203,8 @@ export function start(operator: any, id: string) {
       run('UPDATE workers SET credential_hash=?, lease_expires_at=?, status=?, activity=? WHERE session_id=? AND worker_id=?', sha256(cred), deadline, 'starting', 'Starting', id, w.worker_id);
     }
   });
-  emit(id, { actor: 'operator', kind: 'session.started', provenance: 'operator_decision', summary: `You started the task with ${s.plan.subtasks.length} worker(s); deadline ${deadline}`, data: { scope_policy_version: s.policy_version } });
+  const nw = new Set(s.plan.subtasks.map((t: any) => t.worker_id)).size;
+  emit(id, { actor: 'operator', kind: 'session.started', provenance: 'operator_decision', summary: `You started the task with ${nw} worker(s) and ${s.plan.subtasks.length} subtask(s); deadline ${deadline}`, data: { scope_policy_version: s.policy_version } });
   launch(id);
   return loadSession(id);
 }
@@ -226,7 +228,7 @@ async function orchestrate(id: string, L: Live) {
 
 async function orchestrateDesktops(id: string, L: Live) {
   const s0 = loadSession(id)!;
-  const { findingsByWorker } = await researchOnDesktops(id, L, () => markBudgetExhausted(id, 'model calls'));
+  const { findingsByWorker } = await researchOnDesktops(id, L, (dimension) => markBudgetExhausted(id, dimension));
   // Free the desktops once research is over; the last frames stay in the private replay.
   await stopDesktops(id, L);
   let s = loadSession(id)!;
@@ -414,6 +416,15 @@ export function markBudgetExhausted(id: string, dimension: string) {
   for (const t of tasksFor(id)) if (['ready', 'running'].includes(t.status)) setTask(t.id, 'out_of_budget', 'Not completed: allowance exhausted');
   const settle = L ? Promise.allSettled(L.workers) : Promise.resolve([]);
   settle.then(async () => {
+    // Open-web tasks: assemble and source-check whatever the agents recorded before the allowance ran out.
+    if (loadSession(id)?.scope.mode === 'web') {
+      const rt = tasksFor(id).find(t => t.kind === 'report');
+      try {
+        await buildWebReport(id, new Map(), new AbortController().signal);
+        const v = await verifyReport(id);
+        if (rt) setTask(rt.id, v.status === 'verified' || v.status === 'partial' ? 'partial' : 'failed', `Assembled from findings recorded before the allowance ran out: ${v.summary}`);
+      } catch (e: any) { console.error('[controller] report after budget exhaustion', e); }
+    }
     if (latestArtifact(id, 'comparison')) await verifyComparison(id);
     if (latestArtifact(id, 'draft')) await verifyDraft(id);
     finalize(id, `Exhausted: ${dimension}.`);
@@ -522,9 +533,8 @@ async function createWebSession(operator: any, input: any) {
   const description = String(input.description || '').trim().slice(0, 2000);
   if (description.length < 8) throw new UserError(422, 'missing_task', 'Describe what the agents should do.');
   input = { ...input, limits: desktopLimitDefaults(input) };
-  const sites = (Array.isArray(input.allowed_sites) ? input.allowed_sites : String(input.allowed_sites || '').split(/[\s,]+/))
-    .map((x: string) => String(x).trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '')).filter((x: string) => /^(\*\.)?[a-z0-9.-]+(:\d+)?$/.test(x));
-  if (!sites.length) throw new UserError(422, 'no_sites', 'List at least one site the agents may open (for example en.wikipedia.org).');
+  const sites = parseSites(input.allowed_sites);
+  if (!sites.length) throw new UserError(422, 'no_sites', 'List at least one site the agents may open (for example en.wikipedia.org), or * for any public website.');
   const limits = clampLimits(input.limits);
   if (PROVIDER.paid) limits.token_ceiling = paidTokenCeiling(limits.token_ceiling);
   const id = 'ses_' + randomBytes(6).toString('hex');
@@ -535,13 +545,15 @@ async function createWebSession(operator: any, input: any) {
     actions: {
       allowed: [
         { type: 'browser.navigate', label: 'Open pages on the approved sites (checked at the proxy, including redirects)' },
-        { type: 'browser.click', label: 'Click, type and scroll on the agent’s own desktop' },
+        { type: 'browser.click', label: 'Click, type, scroll and search on the agent’s own desktop' },
         { type: 'finding.record', label: 'Record findings with an exact quote (TaskLatch captures the page)' },
+        { type: 'artifact.write_candidate', label: 'Save files they make (.csv, .md, .txt, .json) in their own task folder' },
         { type: 'artifact.publish_local', label: 'Coordinator assembles the cited report' },
       ],
       approval: [],
       blocked: [
-        { type: 'browser.navigate', label: 'Any site not on the approved list (including redirects and page assets)' },
+        { type: 'browser.navigate', label: 'Any site not on the approved list (including redirects and page assets) until you allow it' },
+        { type: 'browser.navigate', label: 'Private and local network addresses, and TaskLatch itself (even with “any public website”)' },
         { type: 'browser.submit_form', label: 'Submitting forms (POST) from the desktop' },
         { type: 'upload.send', label: 'Uploading files' },
         { type: 'file.read', label: 'Reading files from other sessions or the host' },
@@ -550,7 +562,8 @@ async function createWebSession(operator: any, input: any) {
     },
     plan_assignments: {}, source_owner: {},
   };
-  const request = { description, expected_result: 'report' };
+  const request: any = { description, expected_result: 'report' };
+  if (input.parent) { request.parent_session_id = input.parent.id; request.context = input.parent.context; }
   run('INSERT INTO sessions (id, operator_id, title, request, scope, plan, status, policy_version, recording, created_at) VALUES (?,?,?,?,?,?,?,?,?,?)',
     id, operator.id, description.length > 90 ? description.slice(0, 89).trimEnd() + '…' : description, JSON.stringify(request), JSON.stringify(scope), '{}', 'DRAFT', 1, input.recording === false ? 0 : 1, nowIso());
   emit(id, { actor: 'operator', kind: 'session.created', provenance: 'operator_decision', summary: `Task created: ${description}`, data: { request, allowed_sites: scope.allowed_sites } });
@@ -566,13 +579,14 @@ export function reviseWebPlan(operator: any, id: string, patch: { subtasks?: any
   if (!['DRAFT', 'READY'].includes(s.status)) throw new UserError(409, 'already_started', 'The plan can only be changed before the task starts.');
   if (s.scope.mode !== 'web') throw new UserError(422, 'not_web', 'Only web tasks have editable subtasks.');
   const scope = { ...s.scope };
-  if (patch.allowed_sites) scope.allowed_sites = patch.allowed_sites.map(x => String(x).trim().toLowerCase()).filter(Boolean);
+  if (patch.allowed_sites) {
+    const sites = parseSites(patch.allowed_sites);
+    if (!sites.length) throw new UserError(422, 'no_sites', 'Keep at least one approved site.');
+    scope.allowed_sites = sites;
+  }
   run('UPDATE sessions SET scope=? WHERE id=?', JSON.stringify(scope), id);
-  const subtasks = (patch.subtasks || s.plan.subtasks).slice(0, 4).map((t: any, i: number) => ({
-    task_id: newId('tsk'), worker_id: `worker-${String.fromCharCode(97 + i)}`, label: `Worker ${String.fromCharCode(65 + i)}`, vendor_id: '', source_ids: [],
-    title: String(t.title || '').slice(0, 120), instructions: String(t.instructions || '').slice(0, 1500), start_url: String(t.start_url || ''), urls: [],
-  })).filter((t: any) => t.title && t.instructions);
-  if (!subtasks.length) throw new UserError(422, 'no_subtasks', 'Keep at least one subtask.');
+  const subtasks = normalizeWebPlan(scope, patch.subtasks || s.plan.subtasks);
+  if (!subtasks.length) throw new UserError(422, 'no_subtasks', 'Keep at least one subtask with a title and instructions.');
   applyPlan(id, { subtasks, rationale: 'Revised by the operator.' }, true);
   emit(id, { actor: 'operator', kind: 'scope.revised', provenance: 'operator_decision', summary: `You revised the plan (${subtasks.length} subtask(s))`, data: patch });
   return loadSession(id);
@@ -590,3 +604,83 @@ export function setTakeover(operator: any, id: string, workerId: string, on: boo
 }
 
 export function liveDesktops(id: string) { return desktopLiveInfo(live.get(id)); }
+
+
+function parseSites(raw: any): string[] {
+  const list = Array.isArray(raw) ? raw : String(raw || '').split(/[\s,]+/);
+  return [...new Set(list.map((x: any) => normalizeSite(x)).filter((x: string | null): x is string => !!x))];
+}
+
+/** Operator asks the coordinator, in plain language, to change the plan before starting. */
+export async function refineWebPlan(operator: any, id: string, instruction: string) {
+  const s = ownSession(operator, id);
+  if (!['DRAFT', 'READY'].includes(s.status)) throw new UserError(409, 'already_started', 'The plan can only be changed before the task starts.');
+  if (s.scope.mode !== 'web') throw new UserError(422, 'not_web', 'Only web tasks have editable subtasks.');
+  const text = String(instruction || '').trim().slice(0, 1000);
+  if (text.length < 3) throw new UserError(422, 'missing_change', 'Say what to change in the plan.');
+  emit(id, { actor: 'operator', kind: 'plan.change_requested', provenance: 'operator_decision', summary: `You asked the coordinator to change the plan: ${text}` });
+  const plan = await refineDesktopPlan(id, s.scope, s.request, s.plan.subtasks, text);
+  if (!plan || !plan.subtasks.length) throw new UserError(502, 'refine_failed', 'The coordinator could not revise the plan. Edit the subtasks directly instead.');
+  applyPlan(id, plan, true);
+  emit(id, { actor: 'coordinator', kind: 'plan.proposed', provenance: 'agent_statement', summary: `Coordinator revised the plan: ${plan.subtasks.map((t: any) => `${t.label} → ${t.title}`).join('; ')}`, data: plan });
+  return loadSession(id);
+}
+
+/**
+ * Operator adds or removes approved sites. Before start this edits the plan's scope; while running it takes
+ * effect on the next request each desktop makes (the proxy reads the scope every time) and is recorded as
+ * an operator decision with a new policy version.
+ */
+export function changeSites(operator: any, id: string, patch: { add?: string[]; remove?: string[] }) {
+  const s = ownSession(operator, id);
+  if (s.scope.mode !== 'web') throw new UserError(422, 'not_web', 'Supplier tasks use their approved supplier pages; sites cannot be added.');
+  if (TERMINAL_STATES.has(s.status) || s.stop_requested_at) throw new UserError(409, 'already_finished', 'This task has finished; start a follow-up to use more sites.');
+  const add = parseSites(patch.add || []);
+  const remove = new Set(parseSites(patch.remove || []));
+  const before: string[] = s.scope.allowed_sites;
+  const sites = [...new Set([...before.filter(x => !remove.has(x)), ...add])];
+  if (!sites.length) throw new UserError(422, 'no_sites', 'Keep at least one approved site.');
+  const added = sites.filter(x => !before.includes(x)); const removed = before.filter(x => !sites.includes(x));
+  if (!added.length && !removed.length) return loadSession(id);
+  run('UPDATE sessions SET scope=?, policy_version=policy_version+1 WHERE id=?', JSON.stringify({ ...s.scope, allowed_sites: sites }), id);
+  const nice = (x: string) => x === '*' ? 'any public website' : x;
+  emit(id, { actor: 'operator', kind: 'scope.sites_changed', provenance: 'operator_decision',
+    summary: `You ${added.length ? `allowed ${added.map(nice).join(', ')}` : ''}${added.length && removed.length ? ' and ' : ''}${removed.length ? `removed ${removed.map(nice).join(', ')}` : ''} for this task`,
+    data: { added, removed, allowed_sites: sites } });
+  if (isLive(id) && added.length) {
+    emit(id, { actor: 'operator', kind: 'operator.message', provenance: 'operator_decision', summary: `Message to all agents: sites approved`,
+      data: { to: 'all', text: `I approved ${added.map(nice).join(', ')} for this task; you may open ${added.length > 1 ? 'them' : 'it'} now.`, automatic: true } });
+  }
+  return loadSession(id);
+}
+
+/** Operator sends an instruction to one running agent (or all). It reaches the agent on its next step. */
+export function messageWorker(operator: any, id: string, to: string, text: string) {
+  const s = ownSession(operator, id);
+  const msg = String(text || '').trim().slice(0, 500);
+  if (!msg) throw new UserError(422, 'empty_message', 'Write a message first.');
+  if (s.scope.runtime !== 'desktop') throw new UserError(422, 'not_desktop', 'Messages go to desktop agents.');
+  if (!isLive(id) || !['RUNNING', 'VERIFYING', 'AWAITING_APPROVAL'].includes(s.status)) throw new UserError(409, 'not_running', 'Agents only take messages while the task is running.');
+  if (to !== 'all' && !get('SELECT 1 FROM workers WHERE session_id=? AND worker_id=?', id, to)) throw new UserError(404, 'no_worker', 'No such agent in this task.');
+  const who = to === 'all' ? 'all agents' : `Worker ${to.slice(-1).toUpperCase()}`;
+  emit(id, { actor: 'operator', kind: 'operator.message', provenance: 'operator_decision', summary: `Message to ${who}: ${msg}`, data: { to, text: msg } });
+  return { ok: true };
+}
+
+/** A follow-up is a new task linked to a finished web task: same sites, fresh desktops, the parent's source-checked findings as context. */
+export async function followUp(operator: any, id: string, input: any) {
+  const s = ownSession(operator, id);
+  if (s.scope.mode !== 'web') throw new UserError(422, 'not_web', 'Follow-ups are for web tasks.');
+  if (!TERMINAL_STATES.has(s.status)) throw new UserError(409, 'still_running', 'Wait until this task finishes, or send the agents a message instead.');
+  const v = latestVerifications(id).report;
+  const checked = new Set((v?.checks || []).filter((c: any) => c.status === 'pass' && c.name.startsWith('finding:')).map((c: any) => c.name.slice(8)));
+  const art = latestArtifact(id, 'report');
+  const report = art ? JSON.parse(readArtifact(id, art.id)!.content.toString('utf8')) : { sections: [] };
+  const findings = report.sections.flatMap((sec: any) => sec.findings.filter((f: any) => checked.has(`${sec.worker.slice(-1).toUpperCase()}${f.n}`)).map((f: any) => ({ claim: f.claim, url: f.url }))).slice(0, 30);
+  const agents = Math.max(1, Math.min(4, Number(input.agents) || s.scope.limits.workers));
+  return createSession(operator, {
+    mode: 'web', runtime: 'desktop', description: input.description, allowed_sites: s.scope.allowed_sites,
+    limits: { ...s.scope.limits, workers: agents }, recording: !!s.recording,
+    parent: { id, context: { parent_description: s.request.description, findings } },
+  });
+}

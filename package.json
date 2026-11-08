@@ -18,7 +18,8 @@
     "check:paid": "node tests/evaluation/check-paid-provider.ts",
     "desktop:vm": "colima start tasklatch --cpu 4 --memory 8 --disk 30 --vm-type vz --mount \"$PWD/.runtime/vm-share:w\"",
     "desktop:build": "mkdir -p .runtime/docker-config && test -f .runtime/docker-config/config.json || echo {} > .runtime/docker-config/config.json; DOCKER_CONFIG=$PWD/.runtime/docker-config DOCKER_HOST=unix://$HOME/.colima/tasklatch/docker.sock docker build -t tasklatch-desktop:1 docker/desktop",
-    "check:desktops": "node tests/evaluation/check-desktops.ts"
+    "check:desktops": "node tests/evaluation/check-desktops.ts",
+    "check:web": "node tests/evaluation/check-web-controls.ts"
   },
   "dependencies": {
     "playwright-core": "1.65.0"

@@ -9,9 +9,27 @@
  */
 import http from 'node:http';
 import net from 'node:net';
+import dns from 'node:dns/promises';
+import { isPrivateIp } from './netguard.ts';
 
 export type EgressRequest = { kind: 'http' | 'connect'; method: string; url: string; host: string; port: number; isPage: boolean };
-export type EgressGate = (r: EgressRequest) => { allowed: boolean; reason: string };
+/** privateOk: the operator listed this host by name, so it may resolve to a private address (for example SupplierLab on loopback). */
+export type EgressGate = (r: EgressRequest) => { allowed: boolean; reason: string; privateOk?: boolean };
+
+/**
+ * Resolve once and connect to that address, so a public-looking name cannot be re-pointed at a private
+ * address (DNS rebinding) between the check and the connection.
+ */
+async function resolveChecked(host: string, privateOk: boolean): Promise<{ ok: true; address: string } | { ok: false; reason: string }> {
+  try {
+    const bare = host.replace(/^\[|\]$/g, '');
+    const address = net.isIP(bare) ? bare : (await dns.lookup(bare)).address;
+    if (isPrivateIp(address) && !privateOk) return { ok: false, reason: `${host} resolves to a private network address (${address}); only sites you list by name may do that.` };
+    return { ok: true, address };
+  } catch (e: any) {
+    return { ok: false, reason: `Could not resolve ${host}: ${e.code || e.message}` };
+  }
+}
 
 const HOP = new Set(['proxy-connection', 'proxy-authorization', 'connection', 'keep-alive', 'transfer-encoding', 'te', 'trailer', 'upgrade']);
 
@@ -30,7 +48,7 @@ export class EgressProxy {
   stats = { allowed: 0, blocked: 0, lastPage: null as string | null };
 
   constructor(gate: EgressGate) {
-    this.server = http.createServer((req, res) => {
+    this.server = http.createServer(async (req, res) => {
       let target: URL;
       try { target = new URL(req.url || ''); } catch { res.writeHead(400); return res.end('absolute URL required'); }
       const isPage = (req.headers['accept'] || '').includes('text/html');
@@ -40,11 +58,18 @@ export class EgressProxy {
         res.writeHead(403, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
         return res.end(blockedHtml(target.toString(), g.reason));
       }
+      const r = await resolveChecked(target.hostname, !!g.privateOk);
+      if (!r.ok) {
+        this.stats.blocked++;
+        res.writeHead(403, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+        return res.end(blockedHtml(target.toString(), r.reason));
+      }
       this.stats.allowed++;
       if (isPage && req.method === 'GET') this.stats.lastPage = target.toString();
       const headers: Record<string, any> = {};
       for (const [k, v] of Object.entries(req.headers)) if (!HOP.has(k.toLowerCase())) headers[k] = v;
-      const up = http.request({ host: target.hostname, port: target.port || 80, method: req.method, path: target.pathname + target.search, headers, timeout: 20000 }, (ur) => {
+      headers.host = target.host;
+      const up = http.request({ host: r.address, port: target.port || 80, method: req.method, path: target.pathname + target.search, headers, timeout: 20000 }, (ur) => {
         const out: Record<string, any> = {};
         for (const [k, v] of Object.entries(ur.headers)) if (!HOP.has(k.toLowerCase())) out[k] = v;
         res.writeHead(ur.statusCode || 502, out);
@@ -55,17 +80,24 @@ export class EgressProxy {
       req.pipe(up);
     });
 
-    this.server.on('connect', (req, client: net.Socket, head) => {
-      const [host, portStr] = (req.url || '').split(':');
-      const port = Number(portStr || 443);
+    this.server.on('connect', async (req, client: net.Socket, head) => {
+      const m = /^(\[[^\]]+\]|[^:]+)(?::(\d+))?$/.exec(req.url || '');
+      const host = m?.[1] ?? ''; const port = Number(m?.[2] || 443);
+      client.on('error', () => client.destroy());
       const g = gate({ kind: 'connect', method: 'CONNECT', url: `https://${host}${port === 443 ? '' : ':' + port}/`, host, port, isPage: true });
       if (!g.allowed) {
         this.stats.blocked++;
         client.end(`HTTP/1.1 403 Forbidden\r\ncontent-type: text/plain\r\n\r\nBlocked by TaskLatch: ${g.reason}\r\n`);
         return;
       }
+      const r = await resolveChecked(host, !!g.privateOk);
+      if (!r.ok) {
+        this.stats.blocked++;
+        client.end(`HTTP/1.1 403 Forbidden\r\ncontent-type: text/plain\r\n\r\nBlocked by TaskLatch: ${r.reason}\r\n`);
+        return;
+      }
       this.stats.allowed++;
-      const upstream = net.connect(port, host, () => {
+      const upstream = net.connect(port, r.address, () => {
         client.write('HTTP/1.1 200 Connection Established\r\n\r\n');
         if (head?.length) upstream.write(head);
         upstream.pipe(client); client.pipe(upstream);

@@ -20,6 +20,8 @@ TaskLatch is a proposed workspace for two AI agents working in local Linux deskt
 - [Presenter notes](presentation/PRESENTER_NOTES.md): the full narrative and source links, also embedded in the PPTX.
 - [Slide content](presentation/SLIDE_CONTENT.md): concise slide-by-slide copy, with the problem on slide 2 and proposed solution/USP on slide 3.
 - [Presentation source and checks](presentation/README.md): authoring files, asset provenance, and validation scope.
+- [Prototype runbook](docs/PROTOTYPE_RUNBOOK.md): how to run the prototype, measured results, and limitations.
+- [Opticon features and TaskLatch](docs/OPTICON_COMPARISON.md): what was adopted from the reference, how the controls still apply, and what was not adopted.
 
 ## Current boundaries
 

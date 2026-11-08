@@ -9,15 +9,15 @@ import { REPO_ROOT, RUNTIME_DIR, PORTS, HOST, CONTROLLER_ORIGIN, SUPPLIERLAB_ORI
 import { get, DB_PATH } from './db.ts';
 import { emit } from './events.ts';
 import { ensureOperator, bootstrapCode, redeemBootstrap, operatorByToken, operatorFromRequest, sessionCookie, clearCookie } from './auth.ts';
-import { createSession, revisePlan, reviseWebPlan, start, stop, resume, reviseDraft, recoverInterrupted, tick, UserError, finalize, setTakeover, liveDesktops } from './sessions.ts';
+import { createSession, revisePlan, reviseWebPlan, refineWebPlan, changeSites, messageWorker, followUp, start, stop, resume, reviseDraft, recoverInterrupted, tick, UserError, finalize, setTakeover, liveDesktops } from './sessions.ts';
 import { probeDesktops, removeOrphanDesktops } from './desktops.ts';
 import { operatorDecision, reconcileSubmission, retryUncertain } from './approvals.ts';
-import { verifyComparison, verifyDraft, verifySubmission } from './verifier.ts';
-import { snapshot, sessionList, evidenceBundle, deleteReplay } from './view.ts';
+import { verifyComparison, verifyDraft, verifySubmission, verifyReport } from './verifier.ts';
+import { snapshot, sessionList, evidenceBundle, deleteReplay, reportCsv } from './view.ts';
 import { readArtifact, replayDir, containedPath, SESSIONS_DIR } from './storage.ts';
 import { probeBrowser, shutdownBrowser } from './runtime.ts';
 import { probeModel, providerLabel } from './model.ts';
-import { PROVIDER } from './provider.ts';
+import { PROVIDER, capTokens } from './provider.ts';
 import { readCatalog, supplierLabHealth } from './supplierlab-client.ts';
 import { loadSession } from './state.ts';
 import { run } from './db.ts';
@@ -66,7 +66,8 @@ async function readiness() {
       { id: 'browser', label: 'Headless browser (offline tests)', status: browser.ok ? 'ready' : 'unavailable', detail: browser.detail },
       { id: 'storage', label: 'Task storage', status: storage.ok ? 'ready' : 'unavailable', detail: storage.detail },
       { id: 'supplierlab', label: 'SupplierLab (synthetic test app)', status: slab ? 'ready' : 'unavailable', detail: slab ? `Reachable at ${SUPPLIERLAB_ORIGIN}` : `Not reachable at ${SUPPLIERLAB_ORIGIN}` },
-      { id: 'model', label: 'Model access', status: model.status === 'available' ? 'ready' : model.status === 'not_configured' ? 'limited' : 'unavailable', detail: model.detail + (PROVIDER.provider !== 'local-rules' ? (PROVIDER.supportsImages ? ' Vision: on (desktop agents can see the screen).' : ' Vision: off — desktop agents need a model that accepts screenshots.') : ''), provider: providerLabel(), paid: PROVIDER.paid, vision: PROVIDER.supportsImages },
+      { id: 'model', label: 'Model access', status: model.status === 'available' ? 'ready' : model.status === 'not_configured' ? 'limited' : 'unavailable', detail: model.detail + (PROVIDER.provider !== 'local-rules' ? (PROVIDER.supportsImages ? ' Vision: on (desktop agents can see the screen).' : ' Vision: off — desktop agents need a model that accepts screenshots.') : ''), provider: providerLabel(), paid: PROVIDER.paid, vision: PROVIDER.supportsImages,
+        max_spend_usd: PROVIDER.paid ? PROVIDER.maxSpendUsd : null, paid_token_ceiling: PROVIDER.paid ? capTokens() : null, usd_per_1m_tokens: PROVIDER.paid ? PROVIDER.usdPer1MTokens : null },
       { id: 'network', label: 'Loopback only', status: 'ready', detail: `Controller on ${CONTROLLER_ORIGIN}; SupplierLab on ${SUPPLIERLAB_ORIGIN}` },
     ],
   };
@@ -130,15 +131,26 @@ const server = http.createServer(async (req, res) => {
       if (m === 'GET' && sub === '/live') return json(res, 200, { desktops: liveDesktops(id) });
       const tk = /^\/workers\/(worker-[a-d])\/takeover$/.exec(sub);
       if (m === 'POST' && tk) { const b = await body(req); return json(res, 200, { desktops: setTakeover(op, id, tk[1], !!b.on) }); }
+      if (m === 'POST' && sub === '/plan/refine') { const b = await body(req); await refineWebPlan(op, id, String(b.instruction || '')); return json(res, 200, snapshot(id)); }
+      if (m === 'POST' && sub === '/sites') { const b = await body(req); changeSites(op, id, { add: b.add, remove: b.remove }); return json(res, 200, snapshot(id)); }
+      if (m === 'POST' && sub === '/messages') { const b = await body(req); messageWorker(op, id, String(b.to || 'all'), String(b.text || '')); return json(res, 200, snapshot(id)); }
+      if (m === 'POST' && sub === '/followup') { const b = await body(req); const child = await followUp(op, id, b); return json(res, 201, snapshot(child!.id)); }
+      if (m === 'GET' && sub === '/report.csv') {
+        res.writeHead(200, { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': `attachment; filename="tasklatch-report-${id}.csv"`, 'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff' });
+        return res.end(reportCsv(id));
+      }
       if (m === 'POST' && sub === '/start') { start(op, id); return json(res, 200, snapshot(id)); }
       if (m === 'POST' && sub === '/stop') { await stop(op, id); return json(res, 200, snapshot(id)); }
       if (m === 'POST' && sub === '/resume') { resume(op, id); return json(res, 200, snapshot(id)); }
       if (m === 'POST' && sub === '/draft') { const b = await body(req); const r = reviseDraft(op, id, Number(b.quantity)); return json(res, 200, { result: r, snapshot: snapshot(id) }); }
       if (m === 'POST' && sub === '/verify') {
         const s = loadSession(id)!;
-        await verifyComparison(id);
-        if (s.scope.expected_result !== 'comparison') await verifyDraft(id);
-        if (s.scope.expected_result === 'submission') await verifySubmission(id);
+        if (s.scope.mode === 'web') await verifyReport(id);
+        else {
+          await verifyComparison(id);
+          if (s.scope.expected_result !== 'comparison') await verifyDraft(id);
+          if (s.scope.expected_result === 'submission') await verifySubmission(id);
+        }
         emit(id, { actor: 'operator', kind: 'verification.rerun', provenance: 'operator_decision', summary: 'You re-ran verification' });
         if (['SUCCEEDED', 'PARTIAL', 'FAILED', 'NEEDS_VERIFICATION', 'CANCELLED', 'BUDGET_EXHAUSTED'].includes(s.status)) finalize(id);
         return json(res, 200, snapshot(id));
@@ -163,7 +175,10 @@ const server = http.createServer(async (req, res) => {
       if (m === 'GET' && am) {
         const a = readArtifact(id, am[1]);
         if (!a) return json(res, 404, { error: 'not_found' });
-        res.writeHead(200, { 'content-type': a.meta.media_type + '; charset=utf-8', 'cache-control': 'private, no-store', 'x-content-sha256': a.meta.sha256, 'x-content-type-options': 'nosniff' });
+        // Agent-made files are served as data, never as pages: text types only, sandboxed, downloadable.
+        const dl = url.searchParams.get('download') === '1';
+        res.writeHead(200, { 'content-type': a.meta.media_type + '; charset=utf-8', 'cache-control': 'private, no-store', 'x-content-sha256': a.meta.sha256, 'x-content-type-options': 'nosniff',
+          'content-security-policy': 'sandbox; default-src \'none\'', ...(dl ? { 'content-disposition': `attachment; filename="${path.basename(a.meta.rel_path).replace(/[^A-Za-z0-9._-]/g, '_')}"` } : {}) });
         return res.end(a.content);
       }
       const fm = /^\/screens\/([0-9]+-[a-z0-9-]+\.(png|jpg))$/.exec(sub);

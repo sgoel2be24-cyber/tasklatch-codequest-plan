@@ -134,6 +134,35 @@ Then `npm start` and choose **New task**:
 | Verification | `verifyReport` in `verifier.ts`, `quotes.ts` | Re-reads every captured page snapshot and checks four things: the hash is intact, the URL matches, the site is approved, and the quote is verbatim. "Verified" means source-checked, not that the claim is true. A rejected finding immediately corrected by the agent is kept and marked superseded. |
 | Workspace | `apps/web/` | Live tab (grid or focus view of noVNC desktops, take-over, activity feed, whiteboard), Board (kanban), editable Plan, cited report, private replay of every agent step. |
 
+### Opticon-derived controls (added 8 November 2026)
+
+The full list, with what was not adopted and why, is in [OPTICON_COMPARISON.md](OPTICON_COMPARISON.md). In short:
+- **Sites:** presets, an **Any public website** (`*`) option, and an *Allow* button for every site the desktops are refused while a task runs. `*` never covers private or local addresses or TaskLatch itself. The proxy pins each name to the address it checked, so a name that resolves to a private address is refused unless you listed it by name.
+- **Messages:** you can tell one agent or all agents something while they work. The message reaches the agent's next step and cannot unlock anything.
+- **Reasoning panel:** each step's thought and action, filterable per agent.
+- **Queues and plan editing:** up to 8 subtasks across 1–4 agents, with an agent picker, add/remove, and revision in plain language.
+- **Follow-ups:** a linked task with the same sites, fresh desktops, and the parent's source-checked findings.
+- **Agent files:** `.csv`/`.md`/`.txt`/`.json` files in the agent's own folder, hash-checked, served as sandboxed downloads. The report also has a CSV export.
+- **Search:** agents can search an approved engine (Bing, Brave Search or Wikipedia).
+- **Replay and dashboard:** a replay player with an in-browser timelapse export, a session summary card, and a **Running now** dashboard with live thumbnails.
+
+Checks (all local rules, no model spend):
+- `npm run check:web`: 35 offline checks.
+  - Site patterns and private-network exclusion.
+  - Proxy DNS pinning, including `localtest.me` resolving to loopback.
+  - Blocked-site listing and mid-run allow.
+  - Queues, plan revision, CSV formula escaping.
+  - Report assembly after the allowance runs out.
+- `npm run check:desktops`: now also covers, on real containers:
+  - a 3-subtask queue on 2 desktops;
+  - a mid-run message and a mid-run site allow;
+  - agent files and the CSV export;
+  - a follow-up task.
+
+  It passes 11/11, and every container is confirmed removed.
+
+**Spend cap and agent count.** With a paid model, the per-task cap (`TASKLATCH_MAX_SPEND_USD`) becomes the token ceiling. A desktop step with a screenshot uses about 3,000 tokens, so $0.05 at $0.50 per million tokens covers about 33 steps in total: roughly 8 per agent with 4 agents. That is too few for most research. The composer now shows this estimate before you start. When the cap is reached, the agents stop and TaskLatch assembles and checks what they found.
+
 **Measured on 8 November 2026** with Fireworks GLM 5.3 Flash (vision on, reasoning effort "low", JSON mode):
 - **Wikipedia task, final run** ("When were the Eiffel Tower and the Statue of Liberty completed, and who designed each?", 2 desktops): **Verified** in 15 s, 8 model calls, ≈ $0.0075. Both findings were source-checked.
   - Earlier runs of the same task exposed problems, each fixed before the next run:
@@ -151,6 +180,8 @@ Then `npm start` and choose **New task**:
 - **DevTools are allowed by policy** because the in-container page reader needs them. Agents can't reach them: no right-click, no shortcut, and `devtools://` is blocked.
 - **The noVNC password is in the live-view URL** that TaskLatch gives the signed-in operator. It is loopback-only.
 - **The model's accuracy is the main limit.** Small vision models still paraphrase quotes and sometimes over-think; TaskLatch marks those as unsupported rather than accepting them.
+- **"Any public website" widens what agents can read, not what they can do.** Form posts over plain HTTP are blocked, but on HTTPS sites the proxy sees only the host, so a form posted over HTTPS to an allowed site is not seen. The agent actions offer no submit step besides typing and pressing Enter.
+- **The Opticon-derived features were tested with local rules only:** queues, messages, mid-run site approval, files, follow-ups and search. None has been run with a real model yet.
 
 ## What is in the build
 

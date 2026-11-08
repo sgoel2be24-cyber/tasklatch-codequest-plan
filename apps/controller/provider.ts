@@ -77,6 +77,11 @@ export function providerRecord() {
 }
 
 /** Token ceiling a paid provider must respect: the configured ceiling, lowered by the spend cap if a rate is known. */
+/** Tokens the per-task spend cap pays for (null when no cap or no rate is configured). */
+export function capTokens(): number | null {
+  return PROVIDER.maxSpendUsd !== null && PROVIDER.usdPer1MTokens ? Math.floor((PROVIDER.maxSpendUsd / PROVIDER.usdPer1MTokens) * 1_000_000) : null;
+}
+
 export function paidTokenCeiling(requested: number | null): number {
   const fallback = requested ?? 60000;
   if (PROVIDER.maxSpendUsd !== null && PROVIDER.usdPer1MTokens) {

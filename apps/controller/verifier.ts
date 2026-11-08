@@ -199,8 +199,13 @@ export async function verifyReport(sessionId: string) {
     }
     if (!secSupported) {
       emptySections++;
-      checks.push({ name: `section:${sec.worker}`, status: 'unverified', detail: `${sec.worker}: “${sec.title}” has no source-checked finding${sec.agent_summary ? ` (agent said: ${String(sec.agent_summary).slice(0, 120)})` : ''}` });
+      checks.push({ name: `section:${sec.task_id ?? sec.worker}`, status: 'unverified', detail: `${sec.worker}: “${sec.title}” has no source-checked finding${sec.agent_summary ? ` (agent said: ${String(sec.agent_summary).slice(0, 120)})` : ''}` });
     }
+  }
+  // Files the agents made are agent statements: TaskLatch checks only that each is still the file it recorded.
+  for (const f of report.files || []) {
+    const r = readArtifact(sessionId, f.artifact);
+    checks.push({ name: `file:${f.name}`, status: r && r.intact ? 'pass' : 'fail', detail: r && r.intact ? `${f.name} by ${f.author} is unchanged since it was saved (contents are not checked)` : `${f.name} is missing or changed after it was saved`, ref: f.artifact });
   }
   const sections = (report.sections || []).length;
   const status: VerifyStatus = !sections || (!supported && !unsupported) ? 'could_not_verify'
