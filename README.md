@@ -4,9 +4,9 @@
 **Team:** Team Update  
 **Presenter:** Shikhar  
 **Event:** CodeQuest: National Tech Hackathon 2026, DotRepo  
-**Status:** idea-stage proposal and implementation plan, 1 November 2026
+**Status:** working local prototype, 8 November 2026 (proposal and plan from 1 November 2026)
 
-TaskLatch is a proposed workspace for two AI agents working in local Linux desktops. Its contribution is an external permission and approval layer, a shared execution budget, and completion checks tied to observable results. Opticon is an attributed reference for the parallel-desktop interaction pattern, not work owned by this team.
+TaskLatch is a local workspace for one to four AI agents, each working in its own Linux desktop. Its contribution is an external permission and approval layer, a shared execution budget, and completion checks tied to observable results. Opticon is an attributed reference for the parallel-desktop interaction pattern, not work owned by this team.
 
 ## Project documents
 
@@ -23,16 +23,25 @@ TaskLatch is a proposed workspace for two AI agents working in local Linux deskt
 - [Prototype runbook](docs/PROTOTYPE_RUNBOOK.md): how to run the prototype, measured results, and limitations.
 - [Opticon features and TaskLatch](docs/OPTICON_COMPARISON.md): what was adopted from the reference, how the controls still apply, and what was not adopted.
 
-## Current boundaries
+## Current state
 
-No prototype has been implemented or benchmarked yet. No API key has been supplied or tested. Colima and Docker clients are installed, but the runtime was stopped at the environment check. E2B is excluded from the baseline because the user's workspace requires a verification payment. NVIDIA's hosted model access remains subject to trial availability and account limits.
+A working prototype runs locally with `npm start`. See the [prototype runbook](docs/PROTOTYPE_RUNBOOK.md) for setup and full results.
 
-The local design uses separate containers inside one Linux VM. It does not provide a separate hardware-isolated VM for each agent. There is no claim of universal prompt-injection prevention, guaranteed reversal of external actions, measured cost savings, or production certification.
+- **Built:** the operator workspace, SupplierLab, the permission gate, the shared allowance, approval of the exact purchase request, stop and recovery, and the independent verifier. It also includes live Linux desktops in Docker (a dedicated Colima VM) and the Opticon-derived controls listed in [OPTICON_COMPARISON.md](docs/OPTICON_COMPARISON.md).
+- **Tested offline:** the acceptance catalog passes 33 of 33 executed cases, with 0 unauthorized SupplierLab writes. The paid-provider, open-web control and desktop checks also pass (11/11, 35/35 and 11/11). These are deterministic boundary tests with local-rules agents, not a measure of model quality.
+- **Tested with a real model:** models were run on Fireworks AI, a paid provider. Each run cost a few cents or less.
+  - On a 72-run scenario set with Nemotron 3.5 Lightning, controlled mode had 0 of 36 false successes and 0 writes without an operator decision. Basic agent mode had 12 of 36 and 17.
+  - Useful completion was 60% in controlled mode and 53% in basic mode. About one finding in six was misread by that small model.
+  - Desktop tasks with GLM 5.3 Flash (a Wikipedia question and a SupplierLab page with hidden instructions) ended Verified.
+- **Not yet tested:** the NVIDIA endpoint has never been run with a real key. The Opticon-derived features (queues, messages, mid-run site approval, files, follow-ups, search) have run only with local rules. The 72-session model comparison in the evaluation plan has not been run.
+- **Isolation:** each agent's desktop is a container inside one Linux VM, not a separate hardware-isolated VM. Network rules are enforced through each desktop's browser proxy, and HTTPS is checked by host only. E2B is excluded because the user's workspace requires a verification payment.
 
-## Immediate next steps
+There is no claim of universal prompt-injection prevention, guaranteed reversal of external actions, measured cost savings, or production certification.
 
-1. Review the 10-slide idea-submission deck.
-2. Confirm model image/tool-call support with a securely configured NVIDIA key.
-3. Build the smallest end-to-end workflow in the backlog.
+## Next steps
+
+1. Run the Opticon-derived features with a real model, within the per-task spend cap.
+2. Probe the NVIDIA endpoint with a real key, and run the model-backed comparison from the evaluation plan.
+3. Record a narrated demo over `npm start`.
 
 Do not put secrets, personal browser profiles, captured personal screens, database contents, or runtime credentials in the repository. Keep generated runtime artifacts out of version control by default.
