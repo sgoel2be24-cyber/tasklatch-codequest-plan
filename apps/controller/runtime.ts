@@ -32,6 +32,18 @@ export function findChromium(): string | null {
       }
     }
   }
+  // Playwright's own default location for this platform (covers Windows and Linux installs made with
+  // `npx playwright-core install chromium`), then an installed Google Chrome or Chromium.
+  try { const p = chromium.executablePath(); if (p && fs.existsSync(p)) return p; } catch { /* not installed */ }
+  const system = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/snap/bin/chromium',
+    path.join(process.env.PROGRAMFILES || 'C:\\Program Files', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(process.env.LOCALAPPDATA || '', 'Google\\Chrome\\Application\\chrome.exe'),
+  ];
+  for (const c of system) if (c && fs.existsSync(c)) return c;
   return null;
 }
 

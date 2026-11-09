@@ -154,7 +154,7 @@ details summary { cursor: pointer; font-weight: 600; }
 .checks { list-style: none; padding: 0; margin: 8px 0 0; }
 .checks li { display: flex; gap: 8px; padding: 4px 0; font-size: .88rem; align-items: baseline; }
 .timeline { list-style: none; padding: 0; margin: 0; }
-.timeline li { display: grid; grid-template-columns: 82px 130px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .88rem; align-items: baseline; }
+.timeline li { display: grid; grid-template-columns: 82px 176px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .88rem; align-items: baseline; }
 .timeline .t { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
 .frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
 .frames figure { margin: 0; font-size: .72rem; color: var(--muted); }

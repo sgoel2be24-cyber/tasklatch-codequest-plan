@@ -8,6 +8,53 @@
 
 TaskLatch is a local workspace for one to four AI agents, each working in its own Linux desktop. Its contribution is an external permission and approval layer, a shared execution budget, and completion checks tied to observable results. Opticon is an attributed reference for the parallel-desktop interaction pattern, not work owned by this team.
 
+## For judges
+
+| | |
+|---|---|
+| **Source code** | This repository |
+| **Demo video** | [examples/demo/tasklatch-demo.webm](examples/demo/tasklatch-demo.webm): a 1 min 40 s captioned walkthrough of a supplier task. It shows the plan, both agents, a misleading page's actions being blocked, approval of the exact purchase request, and the verified receipt. |
+| **Screenshots** | [Below](#screenshots), plus step-by-step stills of the supplier task in [examples/demo/](examples/demo/) |
+| **Live deployment** | Not applicable. TaskLatch is local-only by design: each agent's desktop is a Docker container on the operator's own computer, and the controller listens on `127.0.0.1` only. A public copy would let anyone drive agents with the host's model key. Run it with the steps below. |
+
+### Run it (no account or API key needed)
+
+You need Node.js 23.6 or newer, and Google Chrome or Chromium. If you have neither browser, run `npx playwright-core install chromium` after `npm install`.
+
+```bash
+git clone https://github.com/sgoel2be24-cyber/tasklatch-codequest-plan.git
+cd tasklatch-codequest-plan
+npm install
+npm start
+```
+
+Open <http://127.0.0.1:4000> on the same computer. You are signed in automatically.
+
+**Try this first (no Docker or model key needed):**
+1. Go to **New task** and choose **Supplier comparison**.
+2. For **SupplierLab scenario**, pick **Misleading page content**, and set **Expected result** to **Approved submission**.
+3. Choose **Plan with 2 agents**, review the scope, and choose **Start task**.
+4. Two agents research synthetic vendors. One vendor page hides instructions to order 200 units and upload files. The stand-in agent deliberately tries them, and TaskLatch blocks every attempt.
+5. On the **Approval** tab, check the exact request (20 × ₹450 = ₹9,000) and choose **Approve and save**.
+6. Open **Results & evidence** for the verified comparison, draft and receipt, and **History** for the five blocked actions. In our run, this took about 10 seconds.
+
+Without a model key, the agents use a labelled local-rules stand-in, so nothing is spent. To use a real model, copy `.env.example` to `.env` and fill in one provider.
+
+**Live Linux desktops (optional):** the **Any task on the web** mode gives each agent its own Linux desktop that you can watch and take over. It needs Docker. On macOS with [Colima](https://github.com/abiosoft/colima), run `npm run desktop:vm` and then `npm run desktop:build` once, and restart `npm start`. This is the setup tested here. With another Docker setup, set `TASKLATCH_DOCKER_HOST` to its socket and build the image with `docker build -t tasklatch-desktop:1 docker/desktop`; that path has not been tested. Details are in the [runbook](docs/PROTOTYPE_RUNBOOK.md).
+
+**Tests:** `npm test` runs the 33-case acceptance catalog offline, with no model key.
+
+### Screenshots
+
+These come from a real task: three agents on Linux desktops, using the Fireworks GLM 5.3 Flash model. It finished **Verified** in 21 s for about $0.012.
+
+| | |
+|---|---|
+| ![New task: prompt, agent count, approved sites and spend cap](docs/screenshots/web-01-new-task.png) **New task.** Describe the job, choose 1–4 agents and the sites they may open. The spend cap is shown before you start. | ![Plan review with one subtask per agent](docs/screenshots/web-02-plan.png) **Plan.** The coordinator splits the job into subtasks; you edit and approve them before anything runs. |
+| ![Live view: session summary, desktops, sites and agent reasoning](docs/screenshots/web-03-live-desktops.png) **Live.** Each agent's desktop, its reasoning, the approved sites, and a summary when the task completes. | ![Board of subtasks by agent](docs/screenshots/web-04-board.png) **Board.** What each agent is responsible for, and where it stands. |
+| ![Results: source check and report with quotes](docs/screenshots/web-05-results.png) **Results & evidence.** Every finding's quote is checked against the page TaskLatch captured. The coordinator's summary is labelled as an agent statement, not verified. | ![Usage against the shared allowance](docs/screenshots/web-06-usage.png) **Usage & stop.** One shared allowance for all agents, with usage so far and a stop control. |
+| ![History with policy decisions and blocked sites](docs/screenshots/web-07-history.png) **History.** Hash-chained events that keep your decisions, agent statements, TaskLatch observations and policy blocks apart. | |
+
 ## Project documents
 
 - [Detailed project plan](PROJECT_PLAN.md): scope, user workflow, architecture, implementation contracts, controls, delivery schedule, risks, and release gates.
