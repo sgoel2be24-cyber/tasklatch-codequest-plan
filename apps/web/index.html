@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TaskLatch</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f4d43'/%3E%3Cpath d='M10 15v-3a6 6 0 0 1 12 0v3' stroke='white' stroke-width='3' fill='none'/%3E%3Crect x='8' y='15' width='16' height='11' rx='2' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/"><span class="brand-mark" aria-hidden="true">⌂</span><span>TaskLatch <small>controlled local agents</small></span></a>
+    <nav class="topnav" aria-label="Main">
+      <a href="#/" data-nav="home">Tasks</a>
+      <a href="#/new" data-nav="new">New task</a>
+    </nav>
+    <span class="spacer"></span>
+    <span class="who" id="who"></span>
+  </header>
+  <main id="app" tabindex="-1"><p class="muted">Loading…</p></main>
+  <div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <dialog id="confirm" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+    <h2 id="confirm-title"></h2>
+    <div id="confirm-body"></div>
+    <form method="dialog">
+      <button value="cancel" autofocus>Cancel</button>
+      <button value="ok" id="confirm-ok" class="primary">Confirm</button>
+    </form>
+  </dialog>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

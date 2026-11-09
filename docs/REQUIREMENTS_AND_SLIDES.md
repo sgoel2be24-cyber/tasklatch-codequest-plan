@@ -9,15 +9,17 @@ The required submission is one original technology proposal in 6–10 slides. Th
 | Slide | Subject | Requirement served | Evidence or disclosure |
 | --- | --- | --- | --- |
 | 1 | TaskLatch | Title and team identity | Team Update, Shikhar, CodeQuest 2026, idea-stage proposal |
-| 2 | Agent authority and business risk | Problem statement, real-world relevance | Bounded CSA survey statistic with sample/funding caveat; no average loss claim |
-| 3 | First user and workflow | Target users, problem specificity | Supplier comparison and purchase-request preparation as a proposed initial workflow |
-| 4 | TaskLatch's three controls | Solution and USP | Permissions, shared limits, verified completion; planned capabilities |
-| 5 | Exact approval at the action boundary | How the solution works, technical feasibility | A concrete action preview and the controller's allowed/approval/denied path |
-| 6 | Existing approaches and our contribution | Innovation and uniqueness | Named alternatives with scope limits; Opticon attribution visible |
-| 7 | Local architecture and stack | Technology stack, architecture, constraints | Local Linux VM with two containers, direct NVIDIA API, broker, SQLite |
-| 8 | Prototype evaluation | Feasibility and verification | Planned deterministic checks plus benign/adversarial model-backed runs, no invented results |
-| 9 | Implementation and zero-cash plan | Development plan, feasibility | 2–15 November milestones, model/runtime gates, E2B excluded, local demo |
-| 10 | Intended impact and release evidence | Beneficiaries, impact, scalability | Expected benefits, measurement, independent-reuse disclosure, cloud adapter as future work |
+| 2 | The failures we aim to prevent | Clear problem statement and target user | Unapproved purchase requests, shared resource overruns and success claims without a valid saved result; supporting industry evidence stays in notes |
+| 3 | TaskLatch: controlled desktop agents | Proposed solution, USP and workflow | Editable task/research/review/submit/verify pipeline with approval and denial branches; shared limits apply throughout |
+| 4 | Existing capabilities and our contribution | Innovation and uniqueness | Named alternatives, attributed Opticon reference and precisely scoped original controller/integration/evaluation work |
+| 5 | Local architecture and enforcement | Technology stack and architecture | Editable diagram of UI, controller, two desktops, NVIDIA API and SupplierLab/SQLite; explicit credential and write boundary |
+| 6 | Build sequence and completion evidence | Implementation plan and feasibility | 2–15 November milestones, concrete completion evidence, model/runtime tests and conditional zero-cash baseline |
+| 7 | Expected impact and beneficiaries | Impact and target users | Each expected benefit links to a measurement; no invented savings or incident-reduction results |
+| 8 | Example: a ₹9,000 test purchase request | Exact action approval and technical feasibility | Synthetic exact payload, single-use expiry and changed-quantity rejection; no actual payment |
+| 9 | Tests and acceptance targets | Evaluation and verifiable evidence | 34 planned boundary checks and 72 planned model sessions, explicit two-mode comparison, denominators and targets |
+| 10 | Planned prototype demonstration | Concrete deliverable and judging evidence | Useful success, changed request, retry loop and missing-result scenarios with the proof each should produce |
+
+The content order follows the user's clarification: the problem is explicit on slide 2 and the solution/USP follows immediately on slide 3. Slides 4–7 address innovation, technology, implementation and impact in that order. A later visual revision replaces the generated cover and mint/dark palette with a typographic cover, warm-white backgrounds, charcoal text and deep-blue accents. The body and table content remain unchanged by that visual pass. [Slide content](../presentation/SLIDE_CONTENT.md) provides a concise review copy; [presenter notes](../presentation/PRESENTER_NOTES.md) provide technical detail and source caveats.
 
 ## Claim discipline
 

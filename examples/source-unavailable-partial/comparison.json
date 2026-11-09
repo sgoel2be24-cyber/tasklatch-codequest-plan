@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "comparison_id": "cmp_65c64843998e",
+  "generated_at": "2026-11-07T18:36:04.723Z",
+  "generated_by": "coordinator",
+  "request": {
+    "item_id": "item-usbc-adapter",
+    "item_name": "USB-C adapter (USB-C male to USB-A female, 3A)",
+    "quantity": 20
+  },
+  "currency": "INR",
+  "rows": [
+    {
+      "vendor_id": "v-brightoffice",
+      "vendor_name": "BrightOffice Supplies",
+      "product_id": "bo-uc-301",
+      "product_title": "BrightOffice UC-301 USB-C to USB-A adapter, 3A",
+      "unit_price_minor": 45000,
+      "price_status": "confirmed",
+      "conflicting_prices": [],
+      "currency": "INR",
+      "stock_qty": 120,
+      "stock_status": "in_stock",
+      "meets_quantity": true,
+      "tax_included": true,
+      "shipping_minor": 0,
+      "source_refs": [
+        {
+          "source_id": "src-source-unavailable-bo-page",
+          "source_version": 1,
+          "captured_at": "2026-11-07T18:36:02.283Z",
+          "found_by": "worker-a",
+          "url": "http://127.0.0.1:4600/catalog/source_unavailable/v-brightoffice/bo-uc-301"
+        }
+      ],
+      "found_by": [
+        "worker-a"
+      ],
+      "flags": []
+    }
+  ],
+  "unresolved": [
+    {
+      "source_id": "src-source-unavailable-ke-page",
+      "vendor_id": "v-kartik",
+      "assigned_to": "worker-b",
+      "reason": "Source unavailable: HTTP 503 after 3 attempts."
+    }
+  ],
+  "recommendation": {
+    "vendor_id": "v-brightoffice",
+    "reason": "Lowest confirmed unit price (₹450) among vendors with at least 20 units in stock.",
+    "warnings": []
+  },
+  "warnings": [
+    "Unresolved source src-source-unavailable-ke-page: Source unavailable: HTTP 503 after 3 attempts."
+  ],
+  "untrusted_content": [],
+  "complete": false
+}

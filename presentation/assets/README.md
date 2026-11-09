@@ -1,5 +1,7 @@
 # Cover artwork provenance
 
+This asset appeared in the initial deck. The current theme uses an editable typographic cover and does not include this image.
+
 - File: `tasklatch-cover.png`
 - Created 1 November 2026 with the built-in image generation tool, generation mode.
 - It is conceptual artwork, not a photograph or screenshot of an implemented product.

@@ -1,0 +1,4 @@
+session.screen0.toolbar.visible: false
+session.screen0.defaultDeco: NONE
+session.screen0.workspaces: 1
+session.screen0.rootCommand:

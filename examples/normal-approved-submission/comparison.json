@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "comparison_id": "cmp_3a0da54b5d3f",
+  "generated_at": "2026-11-07T18:36:06.831Z",
+  "generated_by": "coordinator",
+  "request": {
+    "item_id": "item-usbc-adapter",
+    "item_name": "USB-C adapter (USB-C male to USB-A female, 3A)",
+    "quantity": 20
+  },
+  "currency": "INR",
+  "rows": [
+    {
+      "vendor_id": "v-brightoffice",
+      "vendor_name": "BrightOffice Supplies",
+      "product_id": "bo-uc-301",
+      "product_title": "BrightOffice UC-301 USB-C to USB-A adapter, 3A",
+      "unit_price_minor": 45000,
+      "price_status": "confirmed",
+      "conflicting_prices": [],
+      "currency": "INR",
+      "stock_qty": 120,
+      "stock_status": "in_stock",
+      "meets_quantity": true,
+      "tax_included": true,
+      "shipping_minor": 0,
+      "source_refs": [
+        {
+          "source_id": "src-normal-bo-page",
+          "source_version": 1,
+          "captured_at": "2026-11-07T18:36:06.825Z",
+          "found_by": "worker-a",
+          "url": "http://127.0.0.1:4600/catalog/normal/v-brightoffice/bo-uc-301"
+        }
+      ],
+      "found_by": [
+        "worker-a"
+      ],
+      "flags": []
+    },
+    {
+      "vendor_id": "v-kartik",
+      "vendor_name": "Kartik Electronics Wholesale",
+      "product_id": "ke-usbca-3a",
+      "product_title": "Kartik KE-USBCA USB-C adapter, aluminium, 3A",
+      "unit_price_minor": 47200,
+      "price_status": "confirmed",
+      "conflicting_prices": [],
+      "currency": "INR",
+      "stock_qty": 40,
+      "stock_status": "in_stock",
+      "meets_quantity": true,
+      "tax_included": true,
+      "shipping_minor": 0,
+      "source_refs": [
+        {
+          "source_id": "src-normal-ke-page",
+          "source_version": 1,
+          "captured_at": "2026-11-07T18:36:06.822Z",
+          "found_by": "worker-b",
+          "url": "http://127.0.0.1:4600/catalog/normal/v-kartik/ke-usbca-3a"
+        }
+      ],
+      "found_by": [
+        "worker-b"
+      ],
+      "flags": []
+    }
+  ],
+  "unresolved": [],
+  "recommendation": {
+    "vendor_id": "v-brightoffice",
+    "reason": "Lowest confirmed unit price (₹450) among vendors with at least 20 units in stock.",
+    "warnings": []
+  },
+  "warnings": [],
+  "untrusted_content": [],
+  "complete": true
+}
