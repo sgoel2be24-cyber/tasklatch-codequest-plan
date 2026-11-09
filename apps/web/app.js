@@ -95,12 +95,19 @@ async function boot() {
 }
 
 // ---------------------------------------------------------------- login
-function renderLogin() {
+let autoTried = false;
+async function renderLogin() {
+  // On this computer the controller signs you in automatically (unless TASKLATCH_AUTO_SIGNIN=0). Tried once per page load.
+  if (!autoTried) {
+    autoTried = true;
+    const r = await fetch('/api/local-session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}', credentials: 'same-origin' }).catch(() => null);
+    if (r && r.ok) { history.replaceState(null, '', location.pathname + location.hash); return boot(); }
+  }
   const expired = location.search.includes('login=expired');
   $app.innerHTML = `<div class="card" style="max-width:560px;margin:40px auto">
     <h1>Sign in to TaskLatch</h1>
     ${expired ? '<div class="banner warn"><span class="icon">!</span><div><b>That sign-in link was already used or has expired.</b></div></div>' : ''}
-    <p class="muted">TaskLatch runs only on this computer. Open the one-time sign-in link printed by <code>npm start</code>, or paste the operator token from <code>.runtime/secrets/operator-op_local.token</code>.</p>
+    <p class="muted">TaskLatch runs only on this computer. Automatic sign-in is turned off (<code>TASKLATCH_AUTO_SIGNIN=0</code>), so open the one-time sign-in link printed by <code>npm start</code>, or paste the operator token from <code>.runtime/secrets/operator-op_local.token</code>.</p>
     <form id="login" class="stack"><div><label for="tok">Operator token</label><input id="tok" type="password" autocomplete="off" required></div>
     <button class="primary" type="submit">Sign in</button><p id="login-err" class="muted" role="alert"></p></form></div>`;
   document.getElementById('login').addEventListener('submit', async (e) => {

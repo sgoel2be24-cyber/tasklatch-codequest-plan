@@ -24,6 +24,11 @@ import { run } from './db.ts';
 
 const WEB_DIR = path.join(REPO_ROOT, 'apps/web');
 const ALLOWED_ORIGINS = new Set([CONTROLLER_ORIGIN, `http://localhost:${PORTS.controller}`]);
+// Automatic sign-in for whoever opens TaskLatch on this computer (on by default, so a judge or new user
+// needs no token). TASKLATCH_AUTO_SIGNIN=0 turns it off and brings back the token / one-time link only.
+const AUTO_SIGNIN = process.env.TASKLATCH_AUTO_SIGNIN !== '0';
+const ALLOWED_HOSTS = new Set([`127.0.0.1:${PORTS.controller}`, `localhost:${PORTS.controller}`]);
+const LOOPBACK_PEERS = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
 const MIME: Record<string, string> = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.md': 'text/markdown' };
 
 const primaryName = process.env.TASKLATCH_OPERATOR_NAME || 'Local operator';
@@ -106,6 +111,18 @@ const server = http.createServer(async (req, res) => {
       const op = operatorByToken(b.token || '');
       if (!op) return json(res, 401, { error: 'invalid_token', message: 'That operator token is not valid.' });
       return json(res, 200, { operator: op }, { 'set-cookie': sessionCookie(op.id) });
+    }
+    if (m === 'POST' && p === '/api/local-session') {
+      if (!AUTO_SIGNIN) return json(res, 403, { error: 'auto_signin_off', message: 'Automatic sign-in is turned off. Use the operator token.' });
+      // Only the TaskLatch page itself, loaded from this computer: loopback peer, our own Host (blocks DNS
+      // rebinding), our own Origin (required here, blocks other sites), and same-origin fetch metadata.
+      const site = req.headers['sec-fetch-site'];
+      if (!LOOPBACK_PEERS.has(String(req.socket.remoteAddress)) || !ALLOWED_HOSTS.has(String(req.headers.host || '').toLowerCase())
+        || !ALLOWED_ORIGINS.has(String(req.headers.origin || '')) || (site !== undefined && site !== 'same-origin')) {
+        return json(res, 403, { error: 'local_only', message: 'Automatic sign-in works only from the TaskLatch page on this computer.' });
+      }
+      const local = get('SELECT id, name FROM operators WHERE id=?', 'op_local');
+      return json(res, 200, { operator: local }, { 'set-cookie': sessionCookie('op_local') });
     }
     if (m === 'POST' && p === '/api/logout') return json(res, 200, { ok: true }, { 'set-cookie': clearCookie });
 
@@ -221,6 +238,8 @@ server.listen(PORTS.controller, HOST, () => {
   console.log(`[controller] TaskLatch on ${CONTROLLER_ORIGIN}  (${recovered} interrupted session(s) recovered)`);
   console.log(`[controller] One-time sign-in link (15 min): ${link}`);
   console.log(`[controller] Operator token file: .runtime/secrets/operator-op_local.token`);
+  console.log(AUTO_SIGNIN ? `[controller] Automatic sign-in is ON: open ${CONTROLLER_ORIGIN} on this computer, no token needed (TASKLATCH_AUTO_SIGNIN=0 to require it).`
+    : '[controller] Automatic sign-in is OFF: use the link or token above.');
 });
 
 async function shutdown() {

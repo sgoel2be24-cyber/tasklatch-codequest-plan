@@ -14,7 +14,12 @@ npm install
 npm start
 ```
 
-`npm start` launches SupplierLab on `127.0.0.1:4100` and the controller on `127.0.0.1:4000`, then prints a one-time sign-in link that is valid for 15 minutes. You can also sign in by pasting the token from `.runtime/secrets/operator-op_local.token`. Ctrl+C stops both.
+`npm start` launches SupplierLab on `127.0.0.1:4100` and the controller on `127.0.0.1:4000`. Ctrl+C stops both.
+
+**Sign-in:** open <http://127.0.0.1:4000> (or `localhost:4000`) in a browser on the same computer. You are signed in automatically, with no token.
+- Automatic sign-in answers only the TaskLatch page itself. The request must come from this computer, with TaskLatch's own Host and Origin headers and same-origin fetch metadata. Other websites, DNS-rebinding hosts and other machines on the network are refused, and the controller listens on loopback only.
+- **Trade-off:** any program or other user account on this computer could also sign in this way. To require a token, set `TASKLATCH_AUTO_SIGNIN=0` in `.env`. Then use the one-time sign-in link that `npm start` prints (valid for 15 minutes) or the token in `.runtime/secrets/operator-op_local.token`.
+- `npm run check:signin` tests both settings against real controller processes (11 checks).
 
 Acceptance catalog (it starts its own servers on ports 4300/4400 with a fresh runtime folder):
 
@@ -188,7 +193,7 @@ Checks (all local rules, no model spend):
 | Area | Where | What it does |
 | --- | --- | --- |
 | SupplierLab | `fixtures/supplierlab/` | Synthetic vendors, versioned source records, five research scenarios, a purchase-request API that accepts only the broker credential, receipts, a write-attempt log, and admin fault injection (lost response, price change, outage) |
-| Controller | `apps/controller/server.ts` | Loopback HTTP API, one-time and token sign-in, signed SameSite cookie, origin check, per-operator ownership on every route |
+| Controller | `apps/controller/server.ts` | Loopback HTTP API, automatic local sign-in (can be turned off), one-time and token sign-in, signed SameSite cookie, origin check, per-operator ownership on every route |
 | Policy | `apps/controller/policy.ts` | Allowed / Needs your approval / Blocked for each typed action, with stable reason codes; denies by default |
 | Desktops | `apps/controller/runtime.ts` | One Chromium browser context per worker. Every navigation, redirect hop, sub-request and form post passes through the policy gate |
 | Workers | `apps/controller/agent.ts` | Navigate, read, extract a structured finding (vendor, product, price, currency, stock or "stock unknown", source and version, capture time, limitations), save a candidate file |

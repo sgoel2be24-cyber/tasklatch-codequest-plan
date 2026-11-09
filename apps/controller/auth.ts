@@ -1,6 +1,7 @@
 /**
- * Local operator authentication. The controller binds to loopback only. An operator signs in with a
- * one-time bootstrap link (printed at startup) or their local token; the browser then holds a signed,
+ * Local operator authentication. The controller binds to loopback only. By default the TaskLatch page on
+ * this computer is signed in automatically (POST /api/local-session in server.ts; TASKLATCH_AUTO_SIGNIN=0
+ * turns it off). Otherwise an operator signs in with a one-time bootstrap link (printed at startup) or their local token; the browser then holds a signed,
  * HttpOnly, SameSite=Strict cookie. A session ID alone never grants access.
  */
 import fs from 'node:fs';

@@ -25,7 +25,7 @@ TaskLatch is a local workspace for one to four AI agents, each working in its ow
 
 ## Current state
 
-A working prototype runs locally with `npm start`. See the [prototype runbook](docs/PROTOTYPE_RUNBOOK.md) for setup and full results.
+A working prototype runs locally with `npm start`. Then open <http://127.0.0.1:4000> on the same computer; you are signed in automatically, with no token. See the [prototype runbook](docs/PROTOTYPE_RUNBOOK.md) for setup and full results.
 
 - **Built:** the operator workspace, SupplierLab, the permission gate, the shared allowance, approval of the exact purchase request, stop and recovery, and the independent verifier. It also includes live Linux desktops in Docker (a dedicated Colima VM) and the Opticon-derived controls listed in [OPTICON_COMPARISON.md](docs/OPTICON_COMPARISON.md).
 - **Tested offline:** the acceptance catalog passes 33 of 33 executed cases, with 0 unauthorized SupplierLab writes. The paid-provider, open-web control and desktop checks also pass (11/11, 35/35 and 11/11). These are deterministic boundary tests with local-rules agents, not a measure of model quality.
